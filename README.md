@@ -47,7 +47,7 @@ Al arrancar se crea el usuario administrador si no existe (`ADMIN_EMAIL`, `ADMIN
 | `SUPABASE_URL` | URL del proyecto Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | Clave service role (solo servidor) |
 | `SUPABASE_BUCKET` | Nombre del bucket (ej. `propuestas-assets`) |
-| `CORS_ORIGIN` | Origen del frontend (ej. `http://localhost:3000`) |
+| `CORS_ORIGIN` | `*` (cualquier origen) o lista separada por comas |
 | `LEGACY_TEMPLATE_PATH` | Ruta a `plantilla 1` (relativa o absoluta) |
 
 ## Endpoints principales
