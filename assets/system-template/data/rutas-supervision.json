@@ -1,0 +1,40 @@
+{
+  "rutas": [
+    {
+      "id": "sup-norte",
+      "nombre": "Supervisión — ronda norte",
+      "color": "#d4af37",
+      "cicloSegundos": 95,
+      "faseInicial": 0,
+      "coords": [
+        [4.812, -75.802],
+        [4.815, -75.796],
+        [4.808, -75.792],
+        [4.804, -75.798],
+        [4.807, -75.805]
+      ],
+      "paradas": [
+        { "lat": 4.8135, "lng": -75.799, "nombre": "Portería / control" },
+        { "lat": 4.8068, "lng": -75.7945, "nombre": "Zona parqueadero" }
+      ]
+    },
+    {
+      "id": "sup-sur",
+      "nombre": "Supervisión — ronda sur",
+      "color": "#38bdf8",
+      "cicloSegundos": 110,
+      "faseInicial": 0.45,
+      "coords": [
+        [4.802, -75.788],
+        [4.798, -75.782],
+        [4.795, -75.775],
+        [4.801, -75.772],
+        [4.806, -75.778],
+        [4.804, -75.785]
+      ],
+      "paradas": [
+        { "lat": 4.7995, "lng": -75.78, "nombre": "Parada sur 1" }
+      ]
+    }
+  ]
+}

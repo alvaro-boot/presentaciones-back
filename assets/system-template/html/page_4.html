@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es" class="prop-fill">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Propuesta Económica Detallada</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        @keyframes p4-hero-shine {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+
+        @keyframes p4-card-rise {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes p4-chart-fade {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .p4-wrap {
+            --p4-cyan: rgba(6, 182, 212, 0.35);
+            --p4-gold-line: rgba(212, 175, 55, 0.45);
+        }
+
+        .p4-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            background: rgba(34, 211, 238, 0.06);
+            padding: 5px 12px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+        }
+
+        .p4-glass {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .p4-glass::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--p4-cyan), rgba(212, 175, 55, 0.5), transparent);
+            background-size: 200% 100%;
+            animation: p4-hero-shine 5s linear infinite;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        .p4-card-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .p4-card-head h2,
+        .p4-card-head h3 {
+            font-family: var(--font-display);
+            color: var(--soc-text);
+            letter-spacing: -0.02em;
+        }
+
+        .p4-subtotal-hero {
+            position: relative;
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            background:
+                linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(14, 36, 85, 0.45) 50%, rgba(6, 182, 212, 0.08) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow:
+                0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+                0 12px 40px rgba(0, 0, 0, 0.35),
+                0 0 48px rgba(212, 175, 55, 0.08);
+        }
+
+        .p4-subtotal-hero .p4-sub-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--soc-text-muted);
+            margin: 0;
+        }
+
+        .p4-subtotal-hero .p4-sub-value {
+            font-family: var(--font-display);
+            font-size: clamp(1.45rem, 4vw, 2rem);
+            font-weight: 800;
+            color: var(--cootravir-gold-light);
+            margin: 6px 0 0;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 28px rgba(212, 175, 55, 0.25);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .p4-period-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .p4-period-tile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.28);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-left: 3px solid rgba(74, 111, 165, 0.85);
+            transition:
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                transform 0.25s var(--deck-3d-ease, cubic-bezier(0.22, 1, 0.36, 1));
+        }
+
+        .p4-period-tile:nth-child(2) {
+            border-left-color: rgba(212, 175, 55, 0.75);
+        }
+
+        .p4-period-tile:nth-child(3) {
+            border-left-color: rgba(6, 182, 212, 0.65);
+        }
+
+        .p4-period-tile:hover {
+            border-color: rgba(6, 182, 212, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .p4-period-tile span:first-child {
+            font-size: 0.72rem;
+            color: var(--soc-text-muted);
+            line-height: 1.35;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .p4-period-tile .p4-amt {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--soc-text);
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .p4-chart-card #chart-container {
+            position: relative;
+            border-radius: 12px;
+            background: radial-gradient(ellipse 70% 55% at 50% 28%, rgba(74, 111, 165, 0.12), transparent 65%);
+            min-height: 0;
+        }
+
+        .p4-chart-card #chart-container svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .p4-service-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .p4-service-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .p4-svc-tile--wide {
+                grid-column: span 2;
+            }
+        }
+
+        .p4-svc-tile {
+            position: relative;
+            border-radius: 14px;
+            padding: 14px 14px 14px 16px;
+            background: linear-gradient(165deg, rgba(255, 255, 255, 0.06) 0%, rgba(10, 22, 40, 0.55) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+            animation: p4-card-rise 0.65s var(--deck-3d-ease, cubic-bezier(0.22, 1, 0.36, 1)) both;
+        }
+
+        .p4-svc-tile::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.9), rgba(6, 182, 212, 0.45));
+            border-radius: 3px 0 0 3px;
+            opacity: 0.9;
+        }
+
+        .p4-svc-tile:nth-child(1) {
+            animation-delay: 0.04s;
+        }
+        .p4-svc-tile:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        .p4-svc-tile:nth-child(3) {
+            animation-delay: 0.16s;
+        }
+        .p4-svc-tile:nth-child(4) {
+            animation-delay: 0.22s;
+        }
+        .p4-svc-tile:nth-child(5) {
+            animation-delay: 0.28s;
+        }
+
+        /* Vista previa WebGL real (Three.js) por línea de servicio */
+        .p4-svc-webgl-wrap {
+            width: 78px;
+            height: 78px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            background: radial-gradient(ellipse 90% 70% at 35% 18%, rgba(212, 175, 55, 0.1), transparent 55%),
+                linear-gradient(165deg, rgba(18, 32, 58, 0.98) 0%, rgba(7, 11, 20, 1) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.28);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                0 10px 28px rgba(0, 0, 0, 0.5),
+                0 0 36px rgba(6, 182, 212, 0.08);
+            position: relative;
+        }
+
+        .p4-svc-webgl-wrap--wide {
+            width: min(96px, 22vw);
+            height: 78px;
+        }
+
+        .p4-svc-tile:hover .p4-svc-webgl-wrap {
+            border-color: rgba(212, 175, 55, 0.42);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 12px 32px rgba(0, 0, 0, 0.45),
+                0 0 44px rgba(212, 175, 55, 0.12);
+        }
+
+        .p4-svc-tile h4 {
+            font-family: var(--font-display);
+        }
+
+        .p4-qty-pill {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--soc-text-muted);
+        }
+
+        .p4-svc-price {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--cootravir-gold-light);
+            margin-top: 6px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .p4-chart-card {
+            animation: p4-chart-fade 0.8s ease 0.15s both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .p4-glass::before,
+            .p4-svc-tile,
+            .p4-chart-card {
+                animation: none !important;
+            }
+            .p4-period-tile:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="prop-fill">
+    <div class="slide soc-slide deck-tech">
+        <div class="deck-tech-bg" aria-hidden="true">
+            <div class="deck-tech-aurora"></div>
+            <div class="deck-tech-grid"></div>
+            <div class="deck-tech-noise"></div>
+            <div class="deck-tech-scan"></div>
+            <div class="deck-tech-particles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="deck-tech-hud" aria-hidden="true"></div>
+        <header class="soc-header">
+            <h1>Propuesta económica — Tacuara Club Residencial</h1>
+            <div class="soc-header-brand">
+                <span>COOTRAVIR C.T.A.</span>
+                <span class="soc-chip">Oferta 2026</span>
+            </div>
+        </header>
+
+        <div class="soc-body">
+            <div class="doc-wrap p4-wrap flex flex-col flex-1 min-h-0 gap-4">
+                <div class="flex flex-col xl:flex-row gap-4 xl:items-stretch flex-1 min-h-0">
+                    <div class="w-full xl:w-[46%] flex flex-col gap-3 shrink-0 min-h-0">
+                        <div class="soc-glass p4-glass p-4 sm:p-5 flex flex-col min-h-0">
+                            <span class="p4-eyebrow"><i class="fas fa-chart-line" aria-hidden="true"></i> Resumen tarifario</span>
+                            <div class="p4-card-head">
+                                <i class="fas fa-file-invoice-dollar text-2xl shrink-0" style="color: var(--cootravir-gold-light);"></i>
+                                <h2 class="text-base sm:text-lg font-bold m-0 leading-tight">Valores mensuales consolidados</h2>
+                            </div>
+
+                            <div class="p4-subtotal-hero">
+                                <p class="p4-sub-label">Subtotal anual referencia</p>
+                                <p class="p4-sub-value">$ 121.204.687</p>
+                            </div>
+
+                            <div class="p4-period-grid">
+                                <div class="p4-period-tile">
+                                    <span>Total mensual <strong style="color: var(--soc-text);">enero – junio 2026</strong></span>
+                                    <span class="p4-amt">$ 113.604.850</span>
+                                </div>
+                                <div class="p4-period-tile">
+                                    <span>Total mensual <strong style="color: var(--soc-text);">julio 2026</strong></span>
+                                    <span class="p4-amt">$ 114.536.410</span>
+                                </div>
+                                <div class="p4-period-tile">
+                                    <span>Total mensual <strong style="color: var(--soc-text);">agosto – diciembre 2026</strong></span>
+                                    <span class="p4-amt">$ 117.808.230</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="soc-glass p4-glass p4-chart-card p-4 sm:p-5 flex flex-col flex-1 min-h-0">
+                            <div class="p4-card-head mb-1">
+                                <i class="fas fa-chart-pie text-xl shrink-0" style="color: var(--cootravir-gold-light);"></i>
+                                <h3 class="text-sm sm:text-base font-bold m-0">Distribución del subtotal</h3>
+                            </div>
+                            <p class="text-xs m-0 mb-2" style="color: var(--soc-text-muted);">Participación por ítem de cotización (sin descuentos de ronda en gráfico).</p>
+                            <div id="chart-container" class="w-full flex-1 min-h-0" style="min-height: clamp(180px, 24vh, 260px);"></div>
+                        </div>
+                    </div>
+
+                    <div class="w-full xl:flex-1 min-w-0 flex flex-col min-h-0">
+                        <div class="soc-glass p4-glass p-4 sm:p-5 flex flex-col flex-1 min-h-0 h-full">
+                            <span class="p4-eyebrow"><i class="fas fa-layer-group" aria-hidden="true"></i> Desglose</span>
+                            <div class="p4-card-head">
+                                <i class="fas fa-list-ul text-xl shrink-0" style="color: var(--cootravir-gold-light);"></i>
+                                <div>
+                                    <p class="text-xs uppercase tracking-widest m-0 mb-1" style="color: var(--soc-text-muted); letter-spacing: 0.12em;">Detalle de servicios</p>
+                                    <h3 class="text-base sm:text-lg font-bold m-0 leading-tight" style="font-family: var(--font-display); color: var(--soc-text);">Líneas de cobro mensual</h3>
+                                </div>
+                            </div>
+
+                            <div class="p4-service-grid flex-1">
+                                <div class="p4-svc-tile service-item-dark">
+                                    <div class="flex gap-3 items-start">
+                                        <div class="p4-svc-icon-wrap flex items-center justify-center shrink-0" style="width:78px;height:78px;border-radius:14px;background:linear-gradient(165deg,rgba(18,32,58,.98),rgba(7,11,20,1));border:1px solid rgba(6,182,212,.28);"><i class="fas fa-door-open text-2xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <div class="min-w-0 flex-1 pl-0.5">
+                                            <h4 class="font-bold text-xs sm:text-sm leading-snug m-0" style="color: var(--soc-text);">Puesto en Portería 24 horas 30 días sin arma</h4>
+                                            <span class="p4-qty-pill mt-2">Cantidad · 2</span>
+                                            <p class="p4-svc-price m-0">$ 34.600.367</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p4-svc-tile service-item-dark">
+                                    <div class="flex gap-3 items-start">
+                                        <div class="p4-svc-icon-wrap flex items-center justify-center shrink-0" style="width:78px;height:78px;border-radius:14px;background:linear-gradient(165deg,rgba(18,32,58,.98),rgba(7,11,20,1));border:1px solid rgba(6,182,212,.28);"><i class="fas fa-route text-2xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <div class="min-w-0 flex-1 pl-0.5">
+                                            <h4 class="font-bold text-xs sm:text-sm leading-snug m-0" style="color: var(--soc-text);">Puesto en Ronda 24 horas 30 días sin arma</h4>
+                                            <span class="p4-qty-pill mt-2">Cantidad · 4</span>
+                                            <p class="p4-svc-price m-0">$ 69.200.733</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p4-svc-tile service-item-dark">
+                                    <div class="flex gap-3 items-start">
+                                        <div class="p4-svc-icon-wrap flex items-center justify-center shrink-0" style="width:78px;height:78px;border-radius:14px;background:linear-gradient(165deg,rgba(18,32,58,.98),rgba(7,11,20,1));border:1px solid rgba(6,182,212,.28);"><i class="fas fa-user-tie text-2xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <div class="min-w-0 flex-1 pl-0.5">
+                                            <h4 class="font-bold text-xs sm:text-sm leading-snug m-0" style="color: var(--soc-text);">Puesto Coordinador Interno 24 horas 30 días sin arma</h4>
+                                            <span class="p4-qty-pill mt-2">Cantidad · 1</span>
+                                            <p class="p4-svc-price m-0">$ 17.300.183</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p4-svc-tile service-item-dark">
+                                    <div class="flex gap-3 items-start">
+                                        <div class="p4-svc-icon-wrap flex items-center justify-center shrink-0" style="width:78px;height:78px;border-radius:14px;background:linear-gradient(165deg,rgba(18,32,58,.98),rgba(7,11,20,1));border:1px solid rgba(6,182,212,.28);"><i class="fas fa-tag text-2xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <div class="min-w-0 flex-1 pl-0.5">
+                                            <h4 class="font-bold text-xs sm:text-sm leading-snug m-0" style="color: var(--soc-text);">Descuento ronda coordinador diurna (no se cobra)</h4>
+                                            <span class="p4-qty-pill mt-2">Ajuste comercial</span>
+                                            <p class="p4-svc-price m-0">$ 7.599.837</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p4-svc-tile p4-svc-tile--wide service-item-dark">
+                                    <div class="flex gap-3 items-start">
+                                        <div class="p4-svc-icon-wrap flex items-center justify-center shrink-0" style="width:78px;height:78px;border-radius:14px;background:linear-gradient(165deg,rgba(18,32,58,.98),rgba(7,11,20,1));border:1px solid rgba(6,182,212,.28);"><i class="fas fa-shield-halved text-2xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <div class="min-w-0 flex-1 pl-0.5">
+                                            <h4 class="font-bold text-xs sm:text-sm leading-snug m-0" style="color: var(--soc-text);">Prima seguro de vida guardas de seguridad</h4>
+                                            <span class="p4-qty-pill mt-2">Cantidad · 21</span>
+                                            <p class="p4-svc-price m-0">$ 103.404</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var data = [
+                { name: "Puesto en Portería 24h 30 días sin arma", value: 34600367 },
+                { name: "Puesto en Ronda 24h 30 días sin arma", value: 69200733 },
+                { name: "Puesto Coordinador Interno 24h 30 días", value: 17300183 },
+                { name: "Prima seguro de vida guardas", value: 103404 }
+            ];
+
+            var total = 121204687;
+            var resizeTimer = null;
+
+            function renderChart() {
+                var container = document.getElementById("chart-container");
+                if (!container) return;
+                container.innerHTML = "";
+
+                var width = Math.max(container.clientWidth, 260);
+                var height = Math.max(container.clientHeight, 220);
+
+                var uid = "p4-dropshadow-" + Date.now();
+                var svg = d3.select("#chart-container")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("role", "img")
+                    .attr("aria-label", "Gráfico de distribución del subtotal");
+
+                var defs = svg.append("defs");
+                var filter = defs.append("filter")
+                    .attr("id", uid)
+                    .attr("x", "-40%")
+                    .attr("y", "-40%")
+                    .attr("width", "180%")
+                    .attr("height", "180%");
+                filter.append("feDropShadow")
+                    .attr("dx", 0)
+                    .attr("dy", 8)
+                    .attr("stdDeviation", 6)
+                    .attr("flood-color", "rgba(0,0,0,0.45)");
+
+                var color = d3.scaleOrdinal()
+                    .domain(data.map(function (d) { return d.name; }))
+                    .range(["#4a6fa5", "#0e2455", "#6b8bc0", "#d4af37"]);
+
+                var radius = Math.min(width * 0.3, height * 0.34, 102);
+                var innerRadius = radius * 0.58;
+                var pie = d3.pie().value(function (d) { return d.value; }).sort(null).padAngle(0.018);
+                var arc = d3.arc().innerRadius(innerRadius).outerRadius(radius);
+                var arcHover = d3.arc().innerRadius(innerRadius).outerRadius(radius + 7);
+
+                var cx = width / 2;
+                var cy = Math.min(height * 0.34, 108);
+
+                var g = svg.append("g").attr("transform", "translate(" + cx + "," + cy + ")");
+
+                var slices = g.selectAll("path")
+                    .data(pie(data))
+                    .join("path")
+                    .attr("fill", function (d) { return color(d.data.name); })
+                    .attr("stroke", "rgba(7,11,20,0.92)")
+                    .attr("stroke-width", 2)
+                    .attr("filter", "url(#" + uid + ")")
+                    .style("cursor", "pointer")
+                    .attr("d", function (d) {
+                        return arc(Object.assign({}, d, { endAngle: d.startAngle }));
+                    });
+
+                slices.transition()
+                    .duration(880)
+                    .ease(d3.easeCubicOut)
+                    .attrTween("d", function (d) {
+                        var interpolate = d3.interpolate(
+                            { startAngle: d.startAngle, endAngle: d.startAngle },
+                            { startAngle: d.startAngle, endAngle: d.endAngle }
+                        );
+                        return function (t) {
+                            var x = interpolate(t);
+                            return arc(Object.assign({}, d, { startAngle: x.startAngle, endAngle: x.endAngle }));
+                        };
+                    });
+
+                slices.on("mouseover", function (event, d) {
+                    d3.select(this).interrupt().transition().duration(180).attr("d", arcHover(d));
+                });
+                slices.on("mouseout", function (event, d) {
+                    d3.select(this).transition().duration(220).attr("d", arc(d));
+                });
+
+                g.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("dy", "-0.1em")
+                    .style("font-family", "Sora, sans-serif")
+                    .style("font-size", "15px")
+                    .style("font-weight", "700")
+                    .style("fill", "#e8edf5")
+                    .text("Subtotal");
+
+                g.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("dy", "1.05em")
+                    .style("font-family", "Inter, sans-serif")
+                    .style("font-size", "12px")
+                    .style("font-weight", "600")
+                    .style("fill", "#94a3b8")
+                    .style("letter-spacing", "0.04em")
+                    .text("$121.2M");
+
+                var sorted = data.slice().sort(function (a, b) { return b.value - a.value; });
+                var legendY = Math.min(cy + radius + 28, height - 88);
+                var legend = svg.append("g").attr("transform", "translate(14, " + legendY + ")");
+
+                legend.append("text")
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .style("font-family", "Sora, sans-serif")
+                    .style("font-size", "10px")
+                    .style("font-weight", "700")
+                    .style("fill", "#94a3b8")
+                    .style("text-transform", "uppercase")
+                    .style("letter-spacing", "0.08em")
+                    .text("Leyenda");
+
+                var colW = Math.max((width - 28) / 2, 118);
+                var rowH = 22;
+                sorted.forEach(function (d, i) {
+                    var col = i % 2;
+                    var row = Math.floor(i / 2);
+                    var rowG = legend.append("g").attr("transform", "translate(" + (col * colW) + ", " + (12 + row * rowH) + ")");
+                    var pct = ((d.value / total) * 100).toFixed(1);
+                    rowG.append("rect")
+                        .attr("width", 9)
+                        .attr("height", 9)
+                        .attr("y", 3)
+                        .attr("rx", 2)
+                        .attr("fill", color(d.name));
+                    var short = d.name.length > 32 ? d.name.slice(0, 30) + "…" : d.name;
+                    rowG.append("text")
+                        .attr("x", 14)
+                        .attr("y", 12)
+                        .style("font-family", "Inter, sans-serif")
+                        .style("font-size", "10px")
+                        .style("font-weight", "500")
+                        .style("fill", "#cbd5e1")
+                        .text(short + " · " + pct + "%");
+                });
+            }
+
+            function bootP4Chart() {
+                if (typeof d3 === "undefined") return;
+                requestAnimationFrame(renderChart);
+            }
+            if (document.readyState === "complete") bootP4Chart();
+            else window.addEventListener("load", bootP4Chart);
+
+            if (typeof ResizeObserver !== "undefined") {
+                var el = document.getElementById("chart-container");
+                if (el) {
+                    new ResizeObserver(function () {
+                        clearTimeout(resizeTimer);
+                        resizeTimer = setTimeout(function () {
+                            requestAnimationFrame(renderChart);
+                        }, 140);
+                    }).observe(el);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

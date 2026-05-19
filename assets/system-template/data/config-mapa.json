@@ -1,0 +1,23 @@
+{
+  "estilos": {
+    "marcaConjunto": "#dc2626",
+    "marcaAzul": "#2563eb",
+    "perimetro": { "color": "#b91c1c", "weight": 3, "opacity": 0.92 },
+    "enlaceAzulRojo": { "color": "#3b82f6", "weight": 2, "opacity": 0.88, "dashArray": "8 6" },
+    "clusterAzul": {
+      "fillColor": "#93c5fd",
+      "fillOpacity": 0.28,
+      "strokeColor": "#2563eb",
+      "strokeWeight": 2,
+      "strokeOpacity": 0.75
+    }
+  },
+  "supervision": {
+    "cicloSegundos": 85,
+    "colorRuta": "#c4a035",
+    "rutaOpacity": 0.96,
+    "rutaWeight": 5,
+    "rutaDashArray": "8 10",
+    "iconoTamano": 64
+  }
+}

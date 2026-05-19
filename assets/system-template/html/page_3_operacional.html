@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es" class="prop-fill">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Apoyos operacionales adicionales</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <style>
+        /* Carrusel operacional — mismo layout que apoyos tecnológicos */
+        .tech-cc {
+            --tech-cc-dur: 0.55s;
+            --tech-cc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-cc::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(14, 36, 85, 0.35) 0%, transparent 42%),
+                linear-gradient(315deg, rgba(212, 175, 55, 0.06) 0%, transparent 38%),
+                repeating-linear-gradient(
+                    -12deg,
+                    transparent,
+                    transparent 48px,
+                    rgba(255, 255, 255, 0.02) 48px,
+                    rgba(255, 255, 255, 0.02) 49px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .tech-cc-main {
+            position: relative;
+            z-index: 1;
+            flex: 1 1 auto;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: minmax(220px, 44vh) 1fr;
+            gap: 0;
+        }
+
+        @media (min-width: 900px) {
+            .tech-cc-main {
+                grid-template-columns: minmax(300px, 54%) 1fr;
+                grid-template-rows: 1fr;
+                perspective: 1600px;
+                perspective-origin: 48% 50%;
+            }
+        }
+
+        .tech-cc-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(10px, 2vw, 24px);
+            min-height: 0;
+            height: 100%;
+            perspective: 1400px;
+            perspective-origin: 50% 42%;
+            background: radial-gradient(ellipse 80% 70% at 50% 80%, rgba(74, 111, 165, 0.18), transparent 70%),
+                linear-gradient(180deg, rgba(10, 22, 40, 0.95), rgba(7, 11, 20, 0.98));
+            border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+        }
+
+        @media (min-width: 900px) {
+            .tech-cc-visual {
+                border-bottom: none;
+                border-right: 1px solid rgba(212, 175, 55, 0.12);
+            }
+        }
+
+        /* Marco tipo “hero”: proporción cercana a la referencia, escala con alto de ventana */
+        /* Marco “3D”: profundidad + hover (sin recortar: sigue siendo contain) */
+        .tech-cc-visual-frame {
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 16 / 10;
+            max-height: min(72vh, 72dvh, calc(100% - 8px));
+            height: auto;
+            border-radius: 18px;
+            padding: 3px;
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) rotateY(0deg) translateZ(0);
+            transition:
+                transform 0.55s var(--tech-cc-ease),
+                box-shadow 0.55s ease;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.55), rgba(74, 111, 165, 0.45), rgba(14, 36, 85, 0.8));
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+                0 20px 50px rgba(0, 0, 0, 0.55),
+                0 40px 80px rgba(0, 0, 0, 0.25),
+                0 0 80px rgba(74, 111, 165, 0.12);
+        }
+
+        .tech-cc-visual:hover .tech-cc-visual-frame {
+            transform: rotateY(-5deg) rotateX(2.5deg) translateZ(12px);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                0 28px 60px rgba(0, 0, 0, 0.5),
+                0 50px 100px rgba(14, 36, 85, 0.35),
+                0 0 100px rgba(212, 175, 55, 0.15);
+        }
+
+        @media (min-width: 900px) {
+            .tech-cc-visual-frame {
+                max-height: min(76vh, 76dvh, calc(100% - 12px));
+                width: min(100%, calc(min(76vh, 76dvh, calc(100% - 12px)) * 16 / 10));
+            }
+        }
+
+        .tech-cc-visual-frame::before {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: 15px;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.22) 0%,
+                rgba(255, 255, 255, 0) 38%,
+                rgba(255, 255, 255, 0) 62%,
+                rgba(255, 255, 255, 0.06) 100%
+            );
+            mix-blend-mode: overlay;
+            opacity: 0.55;
+            pointer-events: none;
+            z-index: 3;
+            transform: translateZ(2px);
+        }
+
+        .tech-cc-visual-frame::after {
+            content: "";
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 4;
+            transform: translateZ(6px);
+        }
+
+        .tech-cc-visual-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 13px;
+            overflow: hidden;
+            background: radial-gradient(120% 80% at 50% 100%, rgba(74, 111, 165, 0.12), #0a1628 55%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            transition: transform 0.55s var(--tech-cc-ease);
+            backface-visibility: hidden;
+        }
+
+        .tech-cc-visual:hover .tech-cc-visual-inner {
+            transform: translateZ(22px) scale(1.01);
+        }
+
+        .tech-cc-visual-inner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 13px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 22%, transparent 78%, rgba(0, 0, 0, 0.35) 100%);
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: soft-light;
+        }
+
+        .tech-cc-visual-inner img,
+        .tech-cc-visual-inner video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+            position: relative;
+            z-index: 1;
+            transform: translateZ(4px);
+            transition: filter 0.45s ease;
+        }
+
+        .tech-cc-visual:hover .tech-cc-visual-inner img,
+        .tech-cc-visual:hover .tech-cc-visual-inner video {
+            filter: saturate(1.08) contrast(1.03);
+        }
+
+        .tech-cc-scan {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(
+                transparent 0%,
+                rgba(74, 111, 165, 0.07) 48%,
+                rgba(212, 175, 55, 0.06) 50%,
+                transparent 52%
+            );
+            opacity: 0.65;
+            animation: techScan 4.5s linear infinite;
+            z-index: 5;
+            transform: translateZ(8px);
+        }
+
+        @keyframes techScan {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .tech-cc-visual-fallback {
+            font-size: clamp(3rem, 12vw, 5rem);
+            color: var(--cootravir-blue-light);
+            opacity: 0.85;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tech-cc-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: clamp(12px, 2vh, 20px);
+            padding: clamp(16px, 3vw, 40px) clamp(18px, 4vw, 48px) clamp(72px, 10vh, 100px);
+            min-height: 0;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            transition: transform 0.55s var(--tech-cc-ease);
+        }
+
+        @media (min-width: 900px) {
+            .tech-cc-copy {
+                transform: rotateY(-2.5deg) translateZ(8px);
+            }
+
+            .tech-cc:hover .tech-cc-copy {
+                transform: rotateY(-1deg) translateZ(16px);
+            }
+        }
+
+        .tech-cc-badge {
+            display: inline-flex;
+            align-self: flex-start;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cootravir-gold-light);
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 0 24px rgba(212, 175, 55, 0.08);
+        }
+
+        .tech-cc-badge i {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .tech-cc-title {
+            margin: 0;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1.35rem, 3.2vw, 2.35rem);
+            line-height: 1.15;
+            color: var(--soc-text);
+            text-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .tech-cc-title span {
+            background: linear-gradient(105deg, #fff 0%, #c8d4e8 45%, var(--cootravir-gold-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tech-cc-desc {
+            margin: 0;
+            font-size: clamp(0.9rem, 1.55vw, 1.1rem);
+            line-height: 1.65;
+            color: var(--soc-text-muted);
+            max-width: 52ch;
+        }
+
+        .tech-cc-flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+            margin-top: 4px;
+        }
+
+        .tech-cc-flow span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--soc-text-muted);
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tech-cc-flow i {
+            font-size: 10px;
+            color: var(--cootravir-gold-light);
+            opacity: 0.8;
+        }
+
+        .tech-cc-dots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 16px;
+        }
+
+        .tech-cc-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            transition: transform 0.25s var(--tech-cc-ease), background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .tech-cc-dot:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.15);
+        }
+
+        .tech-cc-dot[aria-current="true"] {
+            background: linear-gradient(135deg, var(--cootravir-gold-light), var(--cootravir-blue-light));
+            box-shadow: 0 0 16px rgba(212, 175, 55, 0.45);
+            transform: scale(1.25);
+        }
+
+        .tech-cc-nav {
+            position: absolute;
+            z-index: 4;
+            top: 50%;
+            transform: translateY(-50%) translateZ(40px);
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(12, 20, 40, 0.75);
+            color: var(--soc-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            backdrop-filter: blur(8px);
+            transform-style: preserve-3d;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tech-cc-nav:hover {
+            background: rgba(74, 111, 165, 0.45);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(212, 175, 55, 0.2);
+            transform: translateY(-50%) translateZ(52px) scale(1.04);
+        }
+
+        .tech-cc-nav:active {
+            transform: translateY(-50%) translateZ(28px) scale(0.96);
+        }
+
+        .tech-cc-nav--prev {
+            left: clamp(8px, 2vw, 20px);
+        }
+
+        .tech-cc-nav--next {
+            right: clamp(8px, 2vw, 20px);
+        }
+
+        @media (max-width: 599px) {
+            .tech-cc-nav {
+                top: auto;
+                bottom: 12px;
+                transform: none;
+            }
+            .tech-cc-nav--prev {
+                left: 12px;
+            }
+            .tech-cc-nav--next {
+                right: 12px;
+            }
+            .tech-cc-nav:active {
+                transform: scale(0.96);
+            }
+        }
+
+        .tech-cc-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            z-index: 3;
+        }
+
+        .tech-cc-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cootravir-blue-light), var(--cootravir-gold-light));
+            transition: width 0.1s linear;
+        }
+
+        /* Transiciones entre productos */
+        .tech-cc-visual .tech-cc-visual-inner,
+        .tech-cc-copy .tech-cc-anim {
+            opacity: 1;
+            transform: translateX(0) translateY(0) scale(1);
+            filter: blur(0);
+            transition:
+                opacity var(--tech-cc-dur) var(--tech-cc-ease),
+                transform var(--tech-cc-dur) var(--tech-cc-ease),
+                filter 0.45s ease;
+        }
+
+        .tech-cc.is-switch .tech-cc-visual .tech-cc-visual-inner {
+            opacity: 0;
+            transform: translateX(-18px) scale(0.97);
+            filter: blur(4px);
+        }
+
+        .tech-cc.is-switch .tech-cc-copy .tech-cc-anim {
+            opacity: 0;
+            transform: translateY(16px);
+            filter: blur(3px);
+        }
+
+        .tech-cc.is-switch .tech-cc-copy .tech-cc-desc.tech-cc-anim {
+            transition-delay: 0.04s;
+        }
+
+        .tech-cc-anim-title {
+            transition-delay: 0.06s;
+        }
+
+        .tech-cc-anim-desc {
+            transition-delay: 0.12s;
+        }
+
+        .tech-cc-pause-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 14px;
+            z-index: 2;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--soc-text-muted);
+            opacity: 0.65;
+            pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tech-cc-main {
+                perspective: none !important;
+            }
+            .tech-cc-visual {
+                perspective: none !important;
+            }
+            .tech-cc-visual:hover .tech-cc-visual-frame,
+            .tech-cc-visual-frame {
+                transform: none !important;
+                box-shadow:
+                    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+                    0 20px 50px rgba(0, 0, 0, 0.55),
+                    0 40px 80px rgba(0, 0, 0, 0.25),
+                    0 0 80px rgba(74, 111, 165, 0.12) !important;
+            }
+            .tech-cc-visual:hover .tech-cc-visual-inner,
+            .tech-cc-visual-inner {
+                transform: none !important;
+            }
+            .tech-cc-visual:hover .tech-cc-visual-inner img,
+            .tech-cc-visual:hover .tech-cc-visual-inner video,
+            .tech-cc-visual-inner img,
+            .tech-cc-visual-inner video {
+                transform: none !important;
+                filter: none !important;
+            }
+            .tech-cc-copy,
+            .tech-cc:hover .tech-cc-copy {
+                transform: none !important;
+            }
+            .tech-cc-nav {
+                transform: translateY(-50%) !important;
+            }
+            .tech-cc-nav:hover {
+                transform: translateY(-50%) scale(1.04) !important;
+            }
+            .tech-cc-nav:active {
+                transform: translateY(-50%) scale(0.96) !important;
+            }
+        }
+
+        @media (max-width: 599px) and (prefers-reduced-motion: reduce) {
+            .tech-cc-nav,
+            .tech-cc-nav:hover,
+            .tech-cc-nav:active {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="prop-fill">
+    <div class="slide soc-slide deck-tech">
+        <div class="deck-tech-bg" aria-hidden="true">
+            <div class="deck-tech-aurora"></div>
+            <div class="deck-tech-grid"></div>
+            <div class="deck-tech-noise"></div>
+            <div class="deck-tech-scan"></div>
+            <div class="deck-tech-particles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="deck-tech-hud" aria-hidden="true"></div>
+        <header class="soc-header">
+            <h1>Apoyos operacionales adicionales</h1>
+            <div class="soc-header-brand">
+                <span>COOTRAVIR C.T.A.</span>
+                <span class="soc-chip">Campo / Monitoreo</span>
+            </div>
+        </header>
+
+        <div class="soc-body" style="display: flex; flex-direction: column; min-height: 0;">
+            <div class="tech-cc" id="techCarouselOp" aria-roledescription="carrusel">
+                <div class="tech-cc-main">
+                    <div class="tech-cc-visual">
+                        <div class="tech-cc-visual-frame">
+                            <div class="tech-cc-visual-inner" id="techCcVisual">
+                                <div class="tech-cc-scan" aria-hidden="true"></div>
+                                <img id="techCcImg" alt="" style="display: none; position: relative; z-index: 1;"/>
+                                <video id="techCcVideo" muted loop playsinline style="display: none; position: relative; z-index: 1;"></video>
+                                <div id="techCcFallback" class="tech-cc-visual-fallback" style="display: none; position: relative; z-index: 1;">
+                                    <i class="fas fa-microchip" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="tech-cc-pause-hint">Pausa al pasar el ratón</span>
+                    </div>
+
+                    <div class="tech-cc-copy">
+                        <span class="tech-cc-badge tech-cc-anim" id="techCcBadge"><i class="fas fa-bolt" aria-hidden="true"></i><span id="techCcBadgeText"></span></span>
+                        <h2 class="tech-cc-title tech-cc-anim tech-cc-anim-title" id="techCcTitle"></h2>
+                        <p class="tech-cc-desc tech-cc-anim tech-cc-anim-desc" id="techCcDesc"></p>
+                        <div class="tech-cc-flow" aria-hidden="true">
+                            <span>Despliegue</span><i class="fas fa-chevron-right"></i>
+                            <span>Centro de control</span><i class="fas fa-chevron-right"></i>
+                            <span>Acción coordinada</span>
+                        </div>
+                        <div class="tech-cc-dots" id="techCcDots" role="tablist" aria-label="Apoyos operacionales"></div>
+                    </div>
+                </div>
+
+                <button type="button" class="tech-cc-nav tech-cc-nav--prev" id="techCcPrev" aria-label="Apoyo anterior">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="tech-cc-nav tech-cc-nav--next" id="techCcNext" aria-label="Apoyo siguiente">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                </button>
+
+                <div class="tech-cc-progress" aria-hidden="true">
+                    <div class="tech-cc-progress-bar" id="techCcProgBar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var PRODUCTS = [
+                {
+                    badge: "Móvil",
+                    badgeIcon: "fa-motorcycle",
+                    title: "Unidades móviles scooter",
+                    titleHtml: '<span>Unidades móviles scooter</span>',
+                    desc: "Patrullaje rápido en áreas extensas. Complemento ideal para cobertura dinámica, presencia visible y supervisión en terreno cuando el contexto lo requiere.",
+                    type: "video",
+                    src: "images/scooter-seguridad.mp4",
+                    fallbackIcon: "fa-motorcycle"
+                },
+                {
+                    badge: "SOC",
+                    badgeIcon: "fa-desktop",
+                    title: "Monitoreo centralizado",
+                    titleHtml: '<span>Monitoreo centralizado</span>',
+                    desc: "Alertas, correlación y visualización unificada. Un solo panel para priorizar incidentes, articular unidades de campo y coordinar la respuesta con trazabilidad.",
+                    type: "img",
+                    src: "images/sistema-monitoreo.jpg",
+                    fallbackIcon: "fa-desktop"
+                }
+            ];
+
+            var root = document.getElementById("techCarouselOp");
+            var imgEl = document.getElementById("techCcImg");
+            var vidEl = document.getElementById("techCcVideo");
+            var fbEl = document.getElementById("techCcFallback");
+            var badge = document.getElementById("techCcBadge");
+            var badgeText = document.getElementById("techCcBadgeText");
+            var titleEl = document.getElementById("techCcTitle");
+            var descEl = document.getElementById("techCcDesc");
+            var dotsEl = document.getElementById("techCcDots");
+            var progBar = document.getElementById("techCcProgBar");
+            var idx = 0;
+            var autoplayMs = 9000;
+            var progRaf = null;
+            var slideStart = 0;
+            var paused = false;
+
+            function showMedia(p) {
+                imgEl.style.display = "none";
+                vidEl.style.display = "none";
+                fbEl.style.display = "none";
+                vidEl.removeAttribute("src");
+                vidEl.pause();
+                imgEl.removeAttribute("src");
+
+                if (p.type === "video") {
+                    vidEl.style.display = "block";
+                    vidEl.src = p.src;
+                    vidEl.onerror = function () {
+                        vidEl.style.display = "none";
+                        fbEl.innerHTML = '<i class="fas ' + p.fallbackIcon + '" aria-hidden="true"></i>';
+                        fbEl.style.display = "flex";
+                    };
+                    vidEl.onloadeddata = function () {
+                        try {
+                            vidEl.play();
+                        } catch (e) {}
+                    };
+                } else {
+                    imgEl.style.display = "block";
+                    imgEl.alt = p.title;
+                    imgEl.src = p.src;
+                    imgEl.onerror = function () {
+                        imgEl.style.display = "none";
+                        fbEl.innerHTML = '<i class="fas ' + p.fallbackIcon + '" aria-hidden="true"></i>';
+                        fbEl.style.display = "flex";
+                    };
+                    imgEl.onload = function () {
+                        fbEl.style.display = "none";
+                    };
+                }
+            }
+
+            function applySlide(i) {
+                var p = PRODUCTS[i];
+                badge.querySelector("i").className = "fas " + (p.badgeIcon || "fa-bolt");
+                badgeText.textContent = p.badge;
+                titleEl.innerHTML = p.titleHtml || p.title;
+                descEl.textContent = p.desc;
+                showMedia(p);
+                Array.prototype.forEach.call(dotsEl.querySelectorAll("button"), function (b, j) {
+                    b.setAttribute("aria-current", j === i ? "true" : "false");
+                });
+            }
+
+            function goTo(i, animate) {
+                i = (i + PRODUCTS.length) % PRODUCTS.length;
+                if (animate && root.classList.contains("is-switch")) return;
+                if (animate) {
+                    root.classList.add("is-switch");
+                    setTimeout(function () {
+                        idx = i;
+                        applySlide(idx);
+                        root.classList.remove("is-switch");
+                        void root.offsetWidth;
+                        restartAutoplay();
+                    }, 280);
+                } else {
+                    idx = i;
+                    applySlide(idx);
+                    restartAutoplay();
+                }
+            }
+
+            function next() {
+                goTo(idx + 1, true);
+            }
+
+            function prev() {
+                goTo(idx - 1, true);
+            }
+
+            function buildDots() {
+                dotsEl.innerHTML = "";
+                PRODUCTS.forEach(function (_, j) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.className = "tech-cc-dot";
+                    b.setAttribute("role", "tab");
+                    b.setAttribute("aria-label", "Ver apoyo " + (j + 1));
+                    b.addEventListener("click", function () {
+                        goTo(j, true);
+                    });
+                    dotsEl.appendChild(b);
+                });
+            }
+
+            function clearTimers() {
+                if (progRaf) cancelAnimationFrame(progRaf);
+                progRaf = null;
+            }
+
+            function tickProgress() {
+                if (paused) return;
+                var t = Date.now() - slideStart;
+                var pct = Math.min(100, (t / autoplayMs) * 100);
+                progBar.style.width = pct + "%";
+                if (t >= autoplayMs) {
+                    next();
+                } else {
+                    progRaf = requestAnimationFrame(tickProgress);
+                }
+            }
+
+            function resetAutoplayProgress() {
+                slideStart = Date.now();
+                progBar.style.width = "0%";
+            }
+
+            function restartAutoplay() {
+                clearTimers();
+                resetAutoplayProgress();
+                progRaf = requestAnimationFrame(tickProgress);
+            }
+
+            buildDots();
+            applySlide(0);
+
+            document.getElementById("techCcPrev").addEventListener("click", function () {
+                prev();
+            });
+            document.getElementById("techCcNext").addEventListener("click", function () {
+                next();
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+                if (e.key === "ArrowRight") {
+                    e.preventDefault();
+                    next();
+                } else if (e.key === "ArrowLeft") {
+                    e.preventDefault();
+                    prev();
+                }
+            });
+
+            root.addEventListener("mouseenter", function () {
+                paused = true;
+            });
+            root.addEventListener("mouseleave", function () {
+                paused = false;
+                slideStart = Date.now() - (parseFloat(progBar.style.width) / 100) * autoplayMs;
+                if (!progRaf) progRaf = requestAnimationFrame(tickProgress);
+            });
+
+            restartAutoplay();
+        })();
+    </script>
+</body>
+</html>

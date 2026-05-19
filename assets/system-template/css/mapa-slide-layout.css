@@ -1,0 +1,46 @@
+/* mapa-pereira — layout en iframe del editor y visor */
+
+html.prop-fill,
+body.prop-fill {
+    height: 100%;
+    min-height: 100%;
+}
+
+body.prop-fill > .slide.mapa-page {
+    flex: 1 1 auto;
+    min-height: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.mapa-page .mapa-top {
+    flex-shrink: 0;
+}
+
+.mapa-page #map-wrap {
+    flex: 1 1 auto;
+    min-height: 280px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.mapa-page #map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.mapa-page .leaflet-container {
+    width: 100% !important;
+    height: 100% !important;
+    background: #0a1628;
+}
+
+.mapa-page .leaflet-tile-pane {
+    z-index: 2;
+}

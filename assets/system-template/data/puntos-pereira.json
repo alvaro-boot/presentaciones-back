@@ -1,0 +1,246 @@
+{
+  "puntos": [
+    {
+      "id": "c4",
+      "orden": 4,
+      "lat": 4.794275,
+      "lng": -75.712409,
+      "nombre": "",
+      "tipo": "conjunto"
+    },
+    {
+      "id": "c3",
+      "orden": 3,
+      "lat": 4.795034,
+      "lng": -75.708171,
+      "nombre": "",
+      "tipo": "conjunto"
+    },
+    {
+      "id": "c2",
+      "orden": 2,
+      "lat": 4.797706,
+      "lng": -75.710928,
+      "nombre": "",
+      "tipo": "conjunto"
+    },
+    {
+      "id": "c1",
+      "orden": 1,
+      "lat": 4.798561,
+      "lng": -75.712859,
+      "nombre": "",
+      "tipo": "conjunto"
+    },
+    {
+      "lat": 4.8004,
+      "lng": -75.714427,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.800518,
+      "lng": -75.713419,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.799417,
+      "lng": -75.713408,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.799353,
+      "lng": -75.71226,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.798444,
+      "lng": -75.712239,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.797568,
+      "lng": -75.713193,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.797376,
+      "lng": -75.714309,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.798615,
+      "lng": -75.714577,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.799556,
+      "lng": -75.714609,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c1"
+    },
+    {
+      "lat": 4.797386,
+      "lng": -75.711917,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c2"
+    },
+    {
+      "lat": 4.798509,
+      "lng": -75.711423,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c2"
+    },
+    {
+      "lat": 4.799032,
+      "lng": -75.710651,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c2"
+    },
+    {
+      "lat": 4.798134,
+      "lng": -75.709493,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c2"
+    },
+    {
+      "lat": 4.797194,
+      "lng": -75.710018,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c2"
+    },
+    {
+      "lat": 4.797034,
+      "lng": -75.710951,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c2"
+    },
+    {
+      "lat": 4.796072,
+      "lng": -75.707519,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c3"
+    },
+    {
+      "lat": 4.794853,
+      "lng": -75.706382,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c3"
+    },
+    {
+      "lat": 4.793197,
+      "lng": -75.70592,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c3"
+    },
+    {
+      "lat": 4.792898,
+      "lng": -75.707293,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c3"
+    },
+    {
+      "lat": 4.79402,
+      "lng": -75.708409,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c3"
+    },
+    {
+      "lat": 4.794907,
+      "lng": -75.709203,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c3"
+    },
+    {
+      "lat": 4.794907,
+      "lng": -75.711069,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c4"
+    },
+    {
+      "lat": 4.792983,
+      "lng": -75.710769,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c4"
+    },
+    {
+      "lat": 4.793197,
+      "lng": -75.712829,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c4"
+    },
+    {
+      "lat": 4.794052,
+      "lng": -75.714373,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c4"
+    },
+    {
+      "lat": 4.795334,
+      "lng": -75.713751,
+      "nombre": "",
+      "tipo": "ronda",
+      "conjuntoId": "c4"
+    },
+    {
+      "lat": 4.795345,
+      "lng": -75.711906,
+      "nombre": "",
+      "tipo": "porteria",
+      "conjuntoId": "c4"
+    },
+    {
+      "lat": 4.795719,
+      "lng": -75.708688,
+      "nombre": "",
+      "tipo": "porteria",
+      "conjuntoId": "c3"
+    },
+    {
+      "lat": 4.797226,
+      "lng": -75.711166,
+      "nombre": "",
+      "tipo": "porteria",
+      "conjuntoId": "c2"
+    },
+    {
+      "lat": 4.799556,
+      "lng": -75.714609,
+      "nombre": "",
+      "tipo": "porteria",
+      "conjuntoId": "c1"
+    }
+  ]
+}

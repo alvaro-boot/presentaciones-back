@@ -1,0 +1,1789 @@
+﻿<!DOCTYPE html>
+<html lang="es" class="prop-fill">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Apoyos Adicionales y Beneficios Sin Costo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <link href="css/ap5-apoyos-grid.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ===== Estructura principal ===== */
+        .ap5-main {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 1.6vw, 18px);
+            flex: 1;
+            min-height: 0;
+        }
+        @media (min-width: 1024px) {
+            .ap5-main {
+                flex-direction: row;
+                align-items: stretch;
+            }
+        }
+        .ap5-col-left {
+            width: 100%;
+            display: flex;
+            min-width: 0;
+        }
+        @media (min-width: 1024px) {
+            .ap5-col-left {
+                width: 40%;
+                flex-shrink: 0;
+            }
+        }
+        .ap5-col-right {
+            width: 100%;
+            flex: 1;
+            min-width: 0;
+            min-height: 0;
+            display: flex;
+        }
+
+        /* ===== Tarjeta izquierda (barras 3D reales) ===== */
+        .reinv-card {
+            width: 100%;
+            background:
+                radial-gradient(ellipse 90% 70% at 20% 0%, rgba(74, 111, 165, 0.18), transparent 55%),
+                linear-gradient(155deg, rgba(22, 36, 64, 0.7) 0%, rgba(6, 12, 24, 0.94) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-panel, 14px);
+            padding: clamp(14px, 1.8vw, 22px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(10px, 1.4vw, 14px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+                0 22px 60px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+        }
+        .reinv-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cootravir-gold-light), transparent);
+            opacity: 0.65;
+        }
+        .reinv-card h2 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+            color: var(--soc-text);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.01em;
+        }
+        .reinv-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background:
+                radial-gradient(ellipse 70% 60% at 35% 25%, rgba(255, 255, 255, 0.35), transparent 60%),
+                linear-gradient(145deg, var(--cootravir-gold-light), var(--cootravir-gold-darker));
+            border: 1px solid rgba(232, 201, 111, 0.45);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #2a1f0a;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+                0 4px 10px rgba(212, 175, 55, 0.35);
+            flex-shrink: 0;
+        }
+        .reinv-intro {
+            margin: 0;
+            color: var(--soc-text-muted);
+            font-size: clamp(0.74rem, 1.1vw, 0.85rem);
+            line-height: 1.5;
+        }
+        .reinv-3d {
+            position: relative;
+            width: 100%;
+            height: clamp(240px, 32vw, 340px);
+            background:
+                radial-gradient(ellipse 70% 60% at 50% 35%, rgba(74, 111, 165, 0.18), transparent 70%),
+                linear-gradient(180deg, rgba(8, 18, 36, 0.55), rgba(2, 6, 14, 0.85));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                inset 0 0 24px rgba(0, 0, 0, 0.55);
+            flex: 1;
+            min-height: 0;
+        }
+        #bars-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .reinv-axis {
+            position: absolute;
+            left: 10px;
+            top: 14px;
+            bottom: 64px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 11px;
+            color: #e8edf5;
+            font-weight: 900;
+            font-family: var(--font-display);
+            pointer-events: none;
+            z-index: 2;
+            letter-spacing: 0.02em;
+        }
+        .reinv-axis span {
+            background: rgba(6, 12, 24, 0.85);
+            padding: 3px 9px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+        }
+        .reinv-tags {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+            padding: 0 12px;
+            gap: 6px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .reinv-tags > div {
+            background: linear-gradient(180deg, rgba(8, 14, 28, 0.88), rgba(4, 8, 18, 0.92));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 5px 6px 6px;
+            backdrop-filter: blur(8px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                0 6px 16px rgba(0, 0, 0, 0.5);
+        }
+        .reinv-tag-val {
+            display: block;
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .reinv-tags > div:nth-child(1) { border-color: rgba(74, 111, 165, 0.55); }
+        .reinv-tags > div:nth-child(2) { border-color: rgba(126, 162, 216, 0.55); }
+        .reinv-tags > div:nth-child(3) { border-color: rgba(212, 175, 55, 0.65); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 20px rgba(212, 175, 55, 0.25); }
+        .reinv-tags > div:nth-child(1) .reinv-tag-val { color: #a8c0e8; text-shadow: 0 0 12px rgba(74, 111, 165, 0.6); }
+        .reinv-tags > div:nth-child(2) .reinv-tag-val { color: #d8e2f5; text-shadow: 0 0 12px rgba(126, 162, 216, 0.6); }
+        .reinv-tags > div:nth-child(3) .reinv-tag-val { color: var(--cootravir-gold-light); text-shadow: 0 0 16px rgba(212, 175, 55, 0.7); }
+        .reinv-tag-year {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #e8edf5;
+        }
+        .reinv-bars-chart {
+            position: absolute;
+            left: 52px;
+            right: 10px;
+            top: 18px;
+            bottom: 72px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: clamp(8px, 2vw, 20px);
+            padding: 0 8px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .reinv-bar-col {
+            flex: 1;
+            max-width: 72px;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .reinv-bar-fill {
+            width: 100%;
+            height: var(--h, 40%);
+            min-height: 6px;
+            border-radius: 10px 10px 6px 6px;
+            box-shadow:
+                0 -4px 16px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.22);
+            transition: height 0.45s ease;
+        }
+        .reinv-bar-fill--blue {
+            background: linear-gradient(180deg, #9eb8e8 0%, #4a6fa5 52%, #2a4070 100%);
+        }
+        .reinv-bar-fill--mid {
+            background: linear-gradient(180deg, #d0dff5 0%, #7ea2d8 48%, #4a6fa5 100%);
+        }
+        .reinv-bar-fill--gold {
+            background: linear-gradient(180deg, #fff4c9 0%, #d4af37 42%, #8a6f18 100%);
+            box-shadow:
+                0 0 22px rgba(212, 175, 55, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.28);
+        }
+        .reinv-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            background:
+                linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.04));
+            border: 1px solid rgba(212, 175, 55, 0.22);
+            border-radius: 10px;
+            color: var(--soc-text-muted);
+            font-size: clamp(0.72rem, 1.05vw, 0.8rem);
+            line-height: 1.5;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+        .apoyo-icon-fa, .apoyos-head-icon { flex-shrink: 0; }
+        #bars-canvas, #icons-canvas { display: none !important; }
+        .reinv-note i {
+            color: var(--cootravir-gold-light);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* ===== Tarjeta derecha (iconos 3D realistas) ===== */
+        .apoyos-card {
+            width: 100%;
+            background:
+                radial-gradient(ellipse 90% 70% at 80% 0%, rgba(94, 234, 212, 0.1), transparent 55%),
+                linear-gradient(155deg, rgba(22, 36, 64, 0.7) 0%, rgba(6, 12, 24, 0.94) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-panel, 14px);
+            padding: clamp(14px, 1.8vw, 22px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 1.6vw, 16px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+                0 22px 60px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+        }
+        .apoyos-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #5eead4, transparent);
+            opacity: 0.55;
+        }
+        .apoyos-head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+        .apoyos-head-slot {
+            width: clamp(64px, 8vw, 86px);
+            height: clamp(64px, 8vw, 86px);
+            border-radius: 14px;
+            background:
+                radial-gradient(ellipse 75% 55% at 50% 30%, rgba(232, 201, 111, 0.2), transparent 65%),
+                linear-gradient(180deg, #2a3550 0%, #141c30 100%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                0 10px 26px rgba(0, 0, 0, 0.4);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .apoyos-head-text {
+            min-width: 0;
+        }
+        .apoyos-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #5eead4;
+            font-family: var(--font-display);
+            margin-bottom: 4px;
+        }
+        .apoyos-head h2 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+            color: var(--soc-text);
+            margin: 0;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+        }
+        .apoyos-host {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            isolation: isolate;
+        }
+        #icons-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            display: block;
+        }
+        .apoyos-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(10px, 1.3vw, 14px);
+            height: 100%;
+        }
+        @media (min-width: 640px) {
+            .apoyos-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: minmax(0, 1fr);
+            }
+        }
+        .apoyo-card {
+            position: relative;
+            border-radius: 14px;
+            padding: clamp(8px, 1.1vw, 12px);
+            background:
+                linear-gradient(160deg, rgba(20, 32, 58, 0.65) 0%, rgba(6, 12, 24, 0.92) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+                0 4px 0 rgba(0, 0, 0, 0.28),
+                0 16px 36px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: transform 0.28s ease, border-color 0.2s ease, box-shadow 0.28s ease;
+            min-height: 0;
+            min-width: 0;
+        }
+        .apoyo-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(94, 234, 212, 0.4);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.18),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+                0 6px 0 rgba(0, 0, 0, 0.22),
+                0 24px 56px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(94, 234, 212, 0.12);
+        }
+        .apoyo-card--wide {
+            grid-column: 1 / -1;
+        }
+        .apoyo-vp {
+            width: 100%;
+            flex: 1 1 0;
+            min-height: 0;
+            border-radius: 12px;
+            background:
+                radial-gradient(ellipse 75% 55% at 50% 30%, rgba(232, 201, 111, 0.18), transparent 65%),
+                linear-gradient(180deg, #2a3550 0%, #141c30 100%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+        .apoyo-card--wide .apoyo-vp {
+            min-height: 0;
+        }
+        .apoyo-label {
+            margin: 0;
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+            line-height: 1.35;
+            font-weight: 800;
+            color: var(--soc-text);
+            text-align: center;
+            padding: 4px 6px 2px;
+            letter-spacing: -0.005em;
+        }
+
+        #icons-canvas { display: none !important; }
+        .apoyos-head-slot--icon,
+        .apoyos-head-slot--image {
+            width: clamp(64px, 8vw, 86px);
+            height: clamp(64px, 8vw, 86px);
+            border-radius: 14px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 26px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(165deg, rgba(18, 32, 58, 0.98), rgba(7, 11, 20, 1));
+        }
+        .apoyos-head-slot--icon i { font-size: 1.75rem; color: var(--cootravir-gold-light); }
+        .apoyos-head-slot--image img { width: 100%; height: 100%; object-fit: cover; }
+        /* Imágenes de apoyos: ver css/ap5-apoyos-grid.css (también en editor) */
+
+    </style>
+</head>
+<body class="prop-fill">
+    <div class="slide soc-slide deck-tech">
+        <div class="deck-tech-bg" aria-hidden="true">
+            <div class="deck-tech-aurora"></div>
+            <div class="deck-tech-grid"></div>
+            <div class="deck-tech-noise"></div>
+            <div class="deck-tech-scan"></div>
+            <div class="deck-tech-particles">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="deck-tech-hud" aria-hidden="true"></div>
+
+        <header class="soc-header">
+            <h1>Apoyos adicionales y beneficios sin costo</h1>
+            <div class="soc-header-brand">
+                <span>COOTRAVIR C.T.A.</span>
+                <span class="soc-chip">Valor agregado</span>
+            </div>
+        </header>
+
+        <div class="soc-body">
+            <div class="doc-wrap flex flex-col flex-1 min-h-0">
+                <div class="ap5-main">
+                    <!-- ====== Columna izquierda: ReinversiÃ³n (Barras 3D reales) ====== -->
+                    <div class="ap5-col-left">
+                        <section class="reinv-card">
+                            <h2>
+                                <span class="reinv-icon" aria-hidden="true"><i class="fas fa-sync-alt"></i></span>
+                                <span>ReinversiÃ³n en apoyos a la seguridad</span>
+                            </h2>
+                            <p class="reinv-intro">SegÃºn la duraciÃ³n del contrato, valores adicionales para tecnologÃ­a o uso libre del cliente.</p>
+
+                            <div class="reinv-3d">
+                                <canvas id="bars-canvas" aria-hidden="true"></canvas>
+                                <div class="reinv-bars-chart" aria-hidden="true">
+                                    <div class="reinv-bar-col" style="--h:30%"><div class="reinv-bar-fill reinv-bar-fill--blue"></div></div>
+                                    <div class="reinv-bar-col" style="--h:63%"><div class="reinv-bar-fill reinv-bar-fill--mid"></div></div>
+                                    <div class="reinv-bar-col" style="--h:95%"><div class="reinv-bar-fill reinv-bar-fill--gold"></div></div>
+                                </div>
+                                <div class="reinv-axis" aria-hidden="true">
+                                    <span>$190M</span>
+                                    <span>$95M</span>
+                                    <span>$0</span>
+                                </div>
+                                <div class="reinv-tags" aria-hidden="true">
+                                    <div>
+                                        <span class="reinv-tag-val">$60M</span>
+                                        <span class="reinv-tag-year">1 aÃ±o</span>
+                                    </div>
+                                    <div>
+                                        <span class="reinv-tag-val">$126M</span>
+                                        <span class="reinv-tag-year">2 aÃ±os</span>
+                                    </div>
+                                    <div>
+                                        <span class="reinv-tag-val">$190M</span>
+                                        <span class="reinv-tag-year">3 aÃ±os</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reinv-note">
+                                <i class="fas fa-info-circle"></i>
+                                <span>El valor de apoyo se recomienda destinar a tecnologÃ­a, con opciÃ³n de libre destinaciÃ³n.</span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- ====== Columna derecha: Iconos 3D realistas ====== -->
+                    <div class="ap5-col-right">
+                        <section class="apoyos-card">
+                            <div class="apoyos-head">
+                                <div class="apoyos-head-slot apoyos-head-slot--icon" aria-hidden="true"><i class="fas fa-gift"></i></div>
+                                <div class="apoyos-head-text">
+                                    <span class="apoyos-chip"><i class="fas fa-layer-group"></i> Apoyos incluidos</span>
+                                    <h2>Herramientas de apoyo que no generan costo</h2>
+                                </div>
+                            </div>
+
+                            <div class="apoyos-host">
+                                <canvas id="icons-canvas" aria-hidden="true"></canvas>
+                                <div class="apoyos-grid">
+                                    <article class="apoyo-card">
+                                        <div class="apoyo-icon-fa flex items-center justify-center" style="width:56px;height:56px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);"><i class="fas fa-mobile-screen-button text-xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <p class="apoyo-label">APP Cootravir PH</p>
+                                    </article>
+                                    <article class="apoyo-card">
+                                        <div class="apoyo-icon-fa flex items-center justify-center" style="width:56px;height:56px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);"><i class="fas fa-motorcycle text-xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <p class="apoyo-label">3 motos elÃ©ctricas para ronderos (propiedad Cootravir C.T.A.)</p>
+                                    </article>
+                                    <article class="apoyo-card">
+                                        <div class="apoyo-icon-fa flex items-center justify-center" style="width:56px;height:56px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);"><i class="fas fa-user-tie text-xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <p class="apoyo-label">Coordinador de seguridad y/o ejecutivo de cuenta</p>
+                                    </article>
+                                    <article class="apoyo-card">
+                                        <div class="apoyo-icon-fa flex items-center justify-center" style="width:56px;height:56px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);"><i class="fas fa-bell text-xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <p class="apoyo-label">SupervisiÃ³n permanente y reacciÃ³n ante novedades</p>
+                                    </article>
+                                    <article class="apoyo-card">
+                                        <div class="apoyo-icon-fa flex items-center justify-center" style="width:56px;height:56px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);"><i class="fas fa-network-wired text-xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <p class="apoyo-label">Red de apoyo con PolicÃ­a Nacional</p>
+                                    </article>
+                                    <article class="apoyo-card">
+                                        <div class="apoyo-icon-fa flex items-center justify-center" style="width:56px;height:56px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);"><i class="fas fa-graduation-cap text-xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <p class="apoyo-label">Estudios de seguridad y control de correspondencia</p>
+                                    </article>
+                                    <article class="apoyo-card apoyo-card--wide">
+                                        <div class="apoyo-icon-fa flex items-center justify-center" style="width:56px;height:56px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);"><i class="fas fa-clipboard-list text-xl" style="color:var(--cootravir-gold-light);"></i></div>
+                                        <p class="apoyo-label">Minutas digitales y asesorÃ­as especializadas</p>
+                                    </article>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            if (typeof THREE === "undefined") return;
+
+            // =========================================================
+            // Recursos compartidos
+            // =========================================================
+            var disposables = { mats: [], geos: [], tex: [] };
+            function trackMat(m) { disposables.mats.push(m); return m; }
+            function trackGeo(g) { disposables.geos.push(g); return g; }
+            function trackTex(t) { disposables.tex.push(t); return t; }
+
+            function mphys(o) {
+                return trackMat(new THREE.MeshPhysicalMaterial(o));
+            }
+
+            // ----- Caja redondeada con bisel real (ExtrudeGeometry) -----
+            function roundedBox(w, h, d, r, segs) {
+                r = Math.min(r, w * 0.49, h * 0.49);
+                var s = new THREE.Shape();
+                var x = -w / 2, y = -h / 2;
+                s.moveTo(x + r, y);
+                s.lineTo(x + w - r, y);
+                s.quadraticCurveTo(x + w, y, x + w, y + r);
+                s.lineTo(x + w, y + h - r);
+                s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                s.lineTo(x + r, y + h);
+                s.quadraticCurveTo(x, y + h, x, y + h - r);
+                s.lineTo(x, y + r);
+                s.quadraticCurveTo(x, y, x + r, y);
+                var depth = Math.max(d - r * 0.6, 0.001);
+                var g = new THREE.ExtrudeGeometry(s, {
+                    depth: depth,
+                    bevelEnabled: true,
+                    bevelThickness: r * 0.5,
+                    bevelSize: r * 0.5,
+                    bevelSegments: segs || 4,
+                    curveSegments: 12
+                });
+                g.translate(0, 0, -depth / 2);
+                g.computeVertexNormals();
+                return trackGeo(g);
+            }
+
+            // ----- Sombra de contacto procedural -----
+            var _shadowTex = null;
+            function getShadowTexture() {
+                if (_shadowTex) return _shadowTex;
+                var c = document.createElement("canvas");
+                c.width = 128; c.height = 128;
+                var ctx = c.getContext("2d");
+                var grd = ctx.createRadialGradient(64, 64, 0, 64, 64, 60);
+                grd.addColorStop(0, "rgba(0,0,0,0.7)");
+                grd.addColorStop(0.55, "rgba(0,0,0,0.22)");
+                grd.addColorStop(1, "rgba(0,0,0,0)");
+                ctx.fillStyle = grd;
+                ctx.fillRect(0, 0, 128, 128);
+                _shadowTex = new THREE.CanvasTexture(c);
+                _shadowTex.minFilter = THREE.LinearFilter;
+                trackTex(_shadowTex);
+                return _shadowTex;
+            }
+            function addContactShadow(root, size, yOff) {
+                /* sombras de contacto desactivadas: enturbiaban los colores */
+            }
+
+            // ----- IluminaciÃ³n de estudio (clave + relleno + contra) -----
+            function addStudioLights(sc) {
+                sc.add(new THREE.HemisphereLight(0xe2ecff, 0x18213a, 1.2));
+                sc.add(new THREE.AmbientLight(0xd0deff, 0.7));
+                var key = new THREE.DirectionalLight(0xffffff, 3.2);
+                key.position.set(2.6, 4.8, 3.4);
+                sc.add(key);
+                var fill = new THREE.DirectionalLight(0xffe4ba, 1.5);
+                fill.position.set(-3.2, 0.5, 2.6);
+                sc.add(fill);
+                var rim = new THREE.DirectionalLight(0x7dd3fc, 1.3);
+                rim.position.set(-2.2, 2.2, -3.0);
+                sc.add(rim);
+                var rimGold = new THREE.DirectionalLight(0xe8c96f, 0.9);
+                rimGold.position.set(3.0, 1.0, -2.6);
+                sc.add(rimGold);
+                var front = new THREE.DirectionalLight(0xffffff, 1.2);
+                front.position.set(0, 1.2, 5);
+                sc.add(front);
+            }
+
+            // ----- Entorno PMREM para reflexiones realistas -----
+            function buildEnvScene() {
+                var s = new THREE.Scene();
+                var topSky = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(50, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2)),
+                    trackMat(new THREE.MeshBasicMaterial({ color: 0xc8d4ee, side: THREE.BackSide }))
+                );
+                s.add(topSky);
+                var botGround = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(50, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2)),
+                    trackMat(new THREE.MeshBasicMaterial({ color: 0x05080f, side: THREE.BackSide }))
+                );
+                s.add(botGround);
+
+                function areaLight(w, h, x, y, z, col, intensity) {
+                    var m = new THREE.Mesh(
+                        trackGeo(new THREE.PlaneGeometry(w, h)),
+                        trackMat(new THREE.MeshBasicMaterial({ color: col }))
+                    );
+                    m.position.set(x, y, z);
+                    m.lookAt(0, 0, 0);
+                    m.material.color.multiplyScalar(intensity);
+                    s.add(m);
+                }
+                areaLight(10, 5, -12, 9, -4, 0xffffff, 2.4);
+                areaLight(7, 4, 9, 7, 3, 0xffe0a8, 1.7);
+                areaLight(6, 3, 0, -3, 13, 0x9ec6f6, 1.2);
+                areaLight(4, 2, -4, 3, 11, 0xb5d8f7, 0.9);
+                areaLight(8, 3, 0, 10, 0, 0xf0f5ff, 1.3);
+                return s;
+            }
+
+            // =========================================================
+            // CONSTRUCTORES DE MODELOS 3D (mÃ¡s realistas, biselados, detallados)
+            // =========================================================
+            function buildGift(root) {
+                var goldBase = mphys({
+                    color: 0xe6c46a, metalness: 0.55, roughness: 0.28,
+                    clearcoat: 0.65, clearcoatRoughness: 0.18, envMapIntensity: 0.85
+                });
+                var goldShine = mphys({
+                    color: 0xf2d990, metalness: 0.6, roughness: 0.22,
+                    clearcoat: 0.8, clearcoatRoughness: 0.12, envMapIntensity: 1.0
+                });
+                var red = mphys({
+                    color: 0xc4203f, metalness: 0.15, roughness: 0.45,
+                    clearcoat: 0.5, clearcoatRoughness: 0.25, envMapIntensity: 0.6
+                });
+                // Base
+                var base = new THREE.Mesh(roundedBox(0.7, 0.5, 0.7, 0.06, 6), goldBase);
+                base.position.y = -0.05;
+                root.add(base);
+                // Tapa
+                var lid = new THREE.Mesh(roundedBox(0.78, 0.16, 0.78, 0.05, 5), goldShine);
+                lid.position.y = 0.28;
+                root.add(lid);
+                // Cinta horizontal sobre la tapa
+                var ribH = new THREE.Mesh(
+                    trackGeo(new THREE.BoxGeometry(0.78, 0.08, 0.16)),
+                    red
+                );
+                ribH.position.set(0, 0.37, 0);
+                root.add(ribH);
+                // Cinta vertical (en la cara frontal del cuerpo)
+                var ribV = new THREE.Mesh(
+                    trackGeo(new THREE.BoxGeometry(0.16, 0.5, 0.04)),
+                    red
+                );
+                ribV.position.set(0, -0.05, 0.37);
+                root.add(ribV);
+                var ribV2 = ribV.clone();
+                ribV2.position.z = -0.37;
+                root.add(ribV2);
+                // Lazos del moÃ±o (dos toros verticales)
+                var bowGeo = trackGeo(new THREE.TorusGeometry(0.12, 0.04, 14, 22));
+                var bowL = new THREE.Mesh(bowGeo, red);
+                bowL.position.set(-0.13, 0.5, 0);
+                bowL.rotation.y = Math.PI / 2;
+                bowL.scale.set(1, 0.9, 1);
+                root.add(bowL);
+                var bowR = bowL.clone();
+                bowR.position.x = 0.13;
+                root.add(bowR);
+                // Nudo central
+                var knot = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(0.07, 18, 14)),
+                    red
+                );
+                knot.position.set(0, 0.5, 0);
+                knot.scale.set(1, 0.85, 1);
+                root.add(knot);
+                addContactShadow(root, 1.4, -0.32);
+                root.scale.setScalar(1.05);
+            }
+
+            function buildPhone(root) {
+                var frame = mphys({
+                    color: 0x3556a0, metalness: 0.25, roughness: 0.35,
+                    clearcoat: 0.75, clearcoatRoughness: 0.15, envMapIntensity: 0.8
+                });
+                var screenMat = mphys({
+                    color: 0x0a1426, metalness: 0.05, roughness: 0.25,
+                    emissive: 0x2aa0ff, emissiveIntensity: 1.6,
+                    clearcoat: 0.9, clearcoatRoughness: 0.06
+                });
+                var lens = mphys({
+                    color: 0x1a2236, metalness: 0.5, roughness: 0.28,
+                    clearcoat: 0.85, clearcoatRoughness: 0.1, envMapIntensity: 0.85
+                });
+                var chrome = mphys({
+                    color: 0xd8dde6, metalness: 0.7, roughness: 0.28,
+                    clearcoat: 0.6, clearcoatRoughness: 0.18, envMapIntensity: 0.9
+                });
+                // Cuerpo
+                var body = new THREE.Mesh(roundedBox(0.6, 1.05, 0.1, 0.09, 6), frame);
+                root.add(body);
+                // Pantalla
+                var screenG = roundedBox(0.52, 0.92, 0.014, 0.06, 4);
+                var screen = new THREE.Mesh(screenG, screenMat);
+                screen.position.z = 0.055;
+                root.add(screen);
+                // Notch (cÃ¡mara frontal)
+                var notch = new THREE.Mesh(
+                    trackGeo(new THREE.CapsuleGeometry(0.022, 0.06, 6, 12)),
+                    lens
+                );
+                notch.rotation.z = Math.PI / 2;
+                notch.position.set(0, 0.4, 0.07);
+                root.add(notch);
+                // Isla de cÃ¡mara trasera
+                var island = new THREE.Mesh(roundedBox(0.22, 0.22, 0.04, 0.04, 4), frame);
+                island.position.set(-0.14, 0.32, -0.06);
+                root.add(island);
+                // Lentes
+                function makeLens(x, y, big) {
+                    var ring = new THREE.Mesh(
+                        trackGeo(new THREE.CylinderGeometry(big ? 0.055 : 0.045, big ? 0.055 : 0.045, 0.05, 22)),
+                        chrome
+                    );
+                    ring.rotation.x = Math.PI / 2;
+                    ring.position.set(x, y, -0.085);
+                    root.add(ring);
+                    var inner = new THREE.Mesh(
+                        trackGeo(new THREE.CylinderGeometry(big ? 0.04 : 0.032, big ? 0.04 : 0.032, 0.055, 18)),
+                        lens
+                    );
+                    inner.rotation.x = Math.PI / 2;
+                    inner.position.set(x, y, -0.09);
+                    root.add(inner);
+                }
+                makeLens(-0.19, 0.37, true);
+                makeLens(-0.09, 0.37, false);
+                makeLens(-0.19, 0.27, false);
+                // Flash
+                var flash = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.022, 0.022, 0.04, 14)),
+                    mphys({ color: 0xfff8d0, emissive: 0xffe28a, emissiveIntensity: 0.35, roughness: 0.4, metalness: 0.2 })
+                );
+                flash.rotation.x = Math.PI / 2;
+                flash.position.set(-0.09, 0.27, -0.085);
+                root.add(flash);
+                // Botones laterales
+                var btn = new THREE.Mesh(
+                    trackGeo(new THREE.BoxGeometry(0.02, 0.12, 0.05)),
+                    chrome
+                );
+                btn.position.set(0.31, 0.18, 0);
+                root.add(btn);
+                var btn2 = btn.clone();
+                btn2.position.set(0.31, -0.02, 0);
+                btn2.scale.y = 0.55;
+                root.add(btn2);
+                addContactShadow(root, 1.5, -0.6);
+                root.rotation.x = -0.05;
+            }
+
+            function buildMoto(root) {
+                var body = mphys({
+                    color: 0x4a78d4, metalness: 0.32, roughness: 0.3,
+                    clearcoat: 0.9, clearcoatRoughness: 0.12, envMapIntensity: 0.9
+                });
+                var gold = mphys({
+                    color: 0xefce78, metalness: 0.72, roughness: 0.22,
+                    clearcoat: 0.75, clearcoatRoughness: 0.14, envMapIntensity: 1.1
+                });
+                var tireMat = mphys({
+                    color: 0x222428, metalness: 0.1, roughness: 0.85, clearcoat: 0.2
+                });
+                var rimMat = mphys({
+                    color: 0xdde2ec, metalness: 0.78, roughness: 0.22, clearcoat: 0.55, envMapIntensity: 1.0
+                });
+                var lightMat = mphys({
+                    color: 0xfff8d8, emissive: 0xffee9a, emissiveIntensity: 1.8,
+                    metalness: 0.15, roughness: 0.22
+                });
+
+                // ----- Ruedas
+                function wheel(x) {
+                    var w = new THREE.Group();
+                    var tire = new THREE.Mesh(
+                        trackGeo(new THREE.TorusGeometry(0.24, 0.08, 18, 32)),
+                        tireMat
+                    );
+                    tire.rotation.y = Math.PI / 2;
+                    w.add(tire);
+                    var rim = new THREE.Mesh(
+                        trackGeo(new THREE.CylinderGeometry(0.14, 0.14, 0.06, 22)),
+                        rimMat
+                    );
+                    rim.rotation.z = Math.PI / 2;
+                    w.add(rim);
+                    var hub = new THREE.Mesh(
+                        trackGeo(new THREE.CylinderGeometry(0.045, 0.045, 0.08, 14)),
+                        gold
+                    );
+                    hub.rotation.z = Math.PI / 2;
+                    w.add(hub);
+                    // Radios
+                    for (var i = 0; i < 5; i++) {
+                        var spoke = new THREE.Mesh(
+                            trackGeo(new THREE.BoxGeometry(0.02, 0.22, 0.02)),
+                            rimMat
+                        );
+                        spoke.rotation.z = (i / 5) * Math.PI * 2;
+                        w.add(spoke);
+                    }
+                    w.position.set(x, -0.2, 0);
+                    return w;
+                }
+                root.add(wheel(-0.52));
+                root.add(wheel(0.52));
+
+                // ----- Cuerpo / tanque
+                var tank = new THREE.Mesh(roundedBox(0.42, 0.22, 0.34, 0.07, 5), body);
+                tank.position.set(-0.05, 0.04, 0);
+                root.add(tank);
+                // CarrocerÃ­a trasera
+                var rear = new THREE.Mesh(roundedBox(0.32, 0.16, 0.3, 0.05, 4), body);
+                rear.position.set(0.32, -0.02, 0);
+                root.add(rear);
+                // Asiento
+                var seat = new THREE.Mesh(roundedBox(0.34, 0.08, 0.22, 0.04, 4), mphys({
+                    color: 0x111418, metalness: 0.18, roughness: 0.6, clearcoat: 0.45
+                }));
+                seat.position.set(0.18, 0.16, 0);
+                root.add(seat);
+                // Frontal / faro
+                var front = new THREE.Mesh(roundedBox(0.22, 0.18, 0.2, 0.06, 4), body);
+                front.position.set(-0.42, 0.12, 0);
+                root.add(front);
+                var headlight = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.07, 0.075, 0.05, 22)),
+                    lightMat
+                );
+                headlight.rotation.z = Math.PI / 2;
+                headlight.position.set(-0.55, 0.12, 0);
+                root.add(headlight);
+                var hRing = new THREE.Mesh(
+                    trackGeo(new THREE.TorusGeometry(0.075, 0.012, 10, 22)),
+                    rimMat
+                );
+                hRing.rotation.y = Math.PI / 2;
+                hRing.position.set(-0.555, 0.12, 0);
+                root.add(hRing);
+                // Manubrio
+                var bar = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.018, 0.018, 0.42, 12)),
+                    rimMat
+                );
+                bar.rotation.x = Math.PI / 2;
+                bar.position.set(-0.32, 0.32, 0);
+                root.add(bar);
+                // EmpuÃ±aduras
+                var grip = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.028, 0.028, 0.1, 14)),
+                    mphys({ color: 0x111418, metalness: 0.15, roughness: 0.6 })
+                );
+                grip.rotation.x = Math.PI / 2;
+                grip.position.set(-0.32, 0.32, 0.18);
+                root.add(grip);
+                var grip2 = grip.clone();
+                grip2.position.z = -0.18;
+                root.add(grip2);
+                // Caballete dorado
+                var stand = new THREE.Mesh(
+                    trackGeo(new THREE.BoxGeometry(0.04, 0.18, 0.02)),
+                    gold
+                );
+                stand.position.set(0.05, -0.32, 0.12);
+                stand.rotation.z = 0.3;
+                root.add(stand);
+                addContactShadow(root, 1.8, -0.48);
+                root.position.y = 0.05;
+            }
+
+            function buildCoordinator(root) {
+                var uni = mphys({
+                    color: 0x375aa0, metalness: 0.2, roughness: 0.45,
+                    clearcoat: 0.55, clearcoatRoughness: 0.22, envMapIntensity: 0.75
+                });
+                var uniDark = mphys({
+                    color: 0x223e7a, metalness: 0.22, roughness: 0.48, clearcoat: 0.5, envMapIntensity: 0.7
+                });
+                var skin = mphys({
+                    color: 0xeec19a, metalness: 0.02, roughness: 0.55, clearcoat: 0.25
+                });
+                var gold = mphys({
+                    color: 0xf2d990, metalness: 0.78, roughness: 0.2,
+                    clearcoat: 0.75, clearcoatRoughness: 0.1, envMapIntensity: 1.2
+                });
+                // Torso
+                var torso = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.22, 0.26, 0.46, 18)),
+                    uni
+                );
+                torso.position.y = 0.05;
+                root.add(torso);
+                // Cuello
+                var neck = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.07, 0.08, 0.08, 14)),
+                    skin
+                );
+                neck.position.y = 0.32;
+                root.add(neck);
+                // Cabeza
+                var head = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(0.17, 24, 18)),
+                    skin
+                );
+                head.position.y = 0.5;
+                head.scale.set(1, 1.05, 1);
+                root.add(head);
+                // Gorra / kepis
+                var capCrown = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.17, 0.18, 0.13, 22)),
+                    uniDark
+                );
+                capCrown.position.y = 0.66;
+                root.add(capCrown);
+                var capTop = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.17, 0.17, 0.02, 22)),
+                    uniDark
+                );
+                capTop.position.y = 0.735;
+                root.add(capTop);
+                var brim = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.23, 0.23, 0.02, 22, 1, false, -Math.PI / 2 - 0.5, Math.PI + 1)),
+                    uniDark
+                );
+                brim.position.set(0, 0.59, 0.04);
+                root.add(brim);
+                // Insignia dorada en gorra
+                var capStar = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.05, 0.05, 0.012, 5)),
+                    gold
+                );
+                capStar.rotation.x = Math.PI / 2;
+                capStar.position.set(0, 0.68, 0.17);
+                root.add(capStar);
+                // Brazos
+                function arm(x) {
+                    var a = new THREE.Mesh(
+                        trackGeo(new THREE.CylinderGeometry(0.08, 0.07, 0.42, 14)),
+                        uni
+                    );
+                    a.position.set(x, 0.04, 0);
+                    a.rotation.z = x > 0 ? -0.15 : 0.15;
+                    root.add(a);
+                    var hand = new THREE.Mesh(
+                        trackGeo(new THREE.SphereGeometry(0.07, 14, 12)),
+                        skin
+                    );
+                    hand.position.set(x * 1.18, -0.18, 0);
+                    root.add(hand);
+                }
+                arm(-0.28);
+                arm(0.28);
+                // Insignia / placa en el pecho
+                var badge = new THREE.Mesh(roundedBox(0.13, 0.18, 0.03, 0.025, 4), gold);
+                badge.position.set(0.13, 0.12, 0.22);
+                badge.rotation.y = -0.3;
+                root.add(badge);
+                // Bordes / cinturÃ³n
+                var belt = new THREE.Mesh(
+                    trackGeo(new THREE.TorusGeometry(0.24, 0.025, 10, 28)),
+                    mphys({ color: 0x0a1322, metalness: 0.4, roughness: 0.4 })
+                );
+                belt.rotation.x = Math.PI / 2;
+                belt.position.y = -0.16;
+                root.add(belt);
+                var buckle = new THREE.Mesh(roundedBox(0.08, 0.06, 0.03, 0.012, 3), gold);
+                buckle.position.set(0, -0.16, 0.24);
+                root.add(buckle);
+                addContactShadow(root, 1.5, -0.42);
+            }
+
+            function buildBell(root) {
+                var brass = mphys({
+                    color: 0xf0d076, metalness: 0.75, roughness: 0.22,
+                    clearcoat: 0.85, clearcoatRoughness: 0.1, envMapIntensity: 1.2
+                });
+                var darkBrass = mphys({
+                    color: 0xc4942e, metalness: 0.78, roughness: 0.28,
+                    clearcoat: 0.6, clearcoatRoughness: 0.18, envMapIntensity: 1.1
+                });
+                var inner = mphys({
+                    color: 0x3a200a, metalness: 0.25, roughness: 0.65
+                });
+                // Perfil de la campana: ancha en la base (boca, abajo) y angosta arriba (cuello)
+                var pts = [];
+                var samples = 22;
+                for (var i = 0; i <= samples; i++) {
+                    var tt = i / samples; // 0 = boca, 1 = cuello
+                    var yy = THREE.MathUtils.lerp(-0.2, 0.34, tt);
+                    var rBase;
+                    if (tt < 0.82) {
+                        var k = tt / 0.82;
+                        rBase = 0.36 - Math.pow(k, 1.7) * 0.28; // 0.36 -> 0.08
+                    } else {
+                        rBase = 0.075 + (tt - 0.82) * 0.05;
+                    }
+                    pts.push(new THREE.Vector2(rBase, yy));
+                }
+                var body = new THREE.Mesh(
+                    trackGeo(new THREE.LatheGeometry(pts, 40)),
+                    brass
+                );
+                root.add(body);
+
+                // Anillo grueso en la boca de la campana
+                var rim = new THREE.Mesh(
+                    trackGeo(new THREE.TorusGeometry(0.355, 0.045, 16, 40)),
+                    darkBrass
+                );
+                rim.rotation.x = Math.PI / 2;
+                rim.position.y = -0.2;
+                root.add(rim);
+
+                // Interior oscuro (cilindro abierto, ancho abajo, angosto arriba)
+                var inside = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.08, 0.33, 0.5, 32, 1, true)),
+                    inner
+                );
+                inside.position.y = -0.05;
+                root.add(inside);
+
+                // Badajo
+                var clapperRod = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.015, 0.015, 0.32, 10)),
+                    darkBrass
+                );
+                clapperRod.position.y = 0.0;
+                root.add(clapperRod);
+                var clapperBall = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(0.08, 20, 14)),
+                    brass
+                );
+                clapperBall.position.y = -0.2;
+                root.add(clapperBall);
+
+                // Cuello / soporte del asa
+                var neck = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.075, 0.09, 0.06, 18)),
+                    brass
+                );
+                neck.position.y = 0.37;
+                root.add(neck);
+                var pin = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.04, 0.045, 0.1, 14)),
+                    brass
+                );
+                pin.position.y = 0.44;
+                root.add(pin);
+
+                // Asa
+                var handle = new THREE.Mesh(
+                    trackGeo(new THREE.TorusGeometry(0.07, 0.022, 14, 26)),
+                    brass
+                );
+                handle.position.y = 0.55;
+                root.add(handle);
+
+                addContactShadow(root, 1.7, -0.28);
+            }
+
+            function buildNetwork(root) {
+                var blueDark = mphys({
+                    color: 0x2a4796, metalness: 0.25, roughness: 0.35,
+                    clearcoat: 0.7, clearcoatRoughness: 0.15, envMapIntensity: 0.8
+                });
+                var blue = mphys({
+                    color: 0x3d62b8, metalness: 0.28, roughness: 0.32,
+                    clearcoat: 0.7, clearcoatRoughness: 0.18, envMapIntensity: 0.85
+                });
+                var gold = mphys({
+                    color: 0xf2d990, metalness: 0.78, roughness: 0.2,
+                    clearcoat: 0.85, clearcoatRoughness: 0.1, envMapIntensity: 1.2
+                });
+                var silver = mphys({
+                    color: 0xd8dce5, metalness: 0.78, roughness: 0.22, clearcoat: 0.65, envMapIntensity: 1.0
+                });
+                // Escudo (forma de escudo policial)
+                var shape = new THREE.Shape();
+                shape.moveTo(-0.32, 0.32);
+                shape.lineTo(0.32, 0.32);
+                shape.lineTo(0.32, -0.05);
+                shape.quadraticCurveTo(0.32, -0.32, 0, -0.4);
+                shape.quadraticCurveTo(-0.32, -0.32, -0.32, -0.05);
+                shape.lineTo(-0.32, 0.32);
+                var shieldGeo = trackGeo(new THREE.ExtrudeGeometry(shape, {
+                    depth: 0.08,
+                    bevelEnabled: true,
+                    bevelThickness: 0.03,
+                    bevelSize: 0.025,
+                    bevelSegments: 4,
+                    curveSegments: 12
+                }));
+                shieldGeo.translate(0, 0, -0.05);
+                var shield = new THREE.Mesh(shieldGeo, blueDark);
+                root.add(shield);
+                // Marco dorado del escudo
+                var frameShape = new THREE.Shape();
+                frameShape.moveTo(-0.32, 0.32);
+                frameShape.lineTo(0.32, 0.32);
+                frameShape.lineTo(0.32, -0.05);
+                frameShape.quadraticCurveTo(0.32, -0.32, 0, -0.4);
+                frameShape.quadraticCurveTo(-0.32, -0.32, -0.32, -0.05);
+                frameShape.lineTo(-0.32, 0.32);
+                var hole = new THREE.Path();
+                hole.moveTo(-0.26, 0.26);
+                hole.lineTo(0.26, 0.26);
+                hole.lineTo(0.26, -0.05);
+                hole.quadraticCurveTo(0.26, -0.27, 0, -0.34);
+                hole.quadraticCurveTo(-0.26, -0.27, -0.26, -0.05);
+                hole.lineTo(-0.26, 0.26);
+                frameShape.holes.push(hole);
+                var frame = new THREE.Mesh(
+                    trackGeo(new THREE.ExtrudeGeometry(frameShape, {
+                        depth: 0.06, bevelEnabled: true, bevelThickness: 0.015,
+                        bevelSize: 0.012, bevelSegments: 3, curveSegments: 12
+                    })),
+                    gold
+                );
+                frame.position.z = 0.03;
+                root.add(frame);
+                // Estrella de cinco puntas (centro)
+                var star = new THREE.Shape();
+                var outerR = 0.16, innerR = 0.075;
+                for (var i = 0; i < 10; i++) {
+                    var a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+                    var r = i % 2 === 0 ? outerR : innerR;
+                    var sx = Math.cos(a) * r;
+                    var sy = Math.sin(a) * r;
+                    if (i === 0) star.moveTo(sx, sy);
+                    else star.lineTo(sx, sy);
+                }
+                var starMesh = new THREE.Mesh(
+                    trackGeo(new THREE.ExtrudeGeometry(star, {
+                        depth: 0.04, bevelEnabled: true, bevelThickness: 0.015,
+                        bevelSize: 0.012, bevelSegments: 3, curveSegments: 8
+                    })),
+                    gold
+                );
+                starMesh.position.set(0, 0.04, 0.07);
+                root.add(starMesh);
+                // Lazos / conectividad: pequeÃ±as esferas en bordes (red de apoyo)
+                var dotMat = mphys({
+                    color: 0x67e8f9, emissive: 0x0891b2, emissiveIntensity: 0.6,
+                    metalness: 0.4, roughness: 0.35
+                });
+                for (var j = 0; j < 3; j++) {
+                    var ang = -Math.PI / 2 + (j - 1) * 0.8;
+                    var dot = new THREE.Mesh(
+                        trackGeo(new THREE.SphereGeometry(0.03, 14, 12)),
+                        dotMat
+                    );
+                    dot.position.set(Math.cos(ang) * 0.5, 0.34 + Math.sin(ang) * 0.05, 0.05);
+                    root.add(dot);
+                }
+                addContactShadow(root, 1.4, -0.5);
+                root.rotation.x = -0.08;
+            }
+
+            function buildStudy(root) {
+                var paperMat = mphys({
+                    color: 0xf0f3f9, metalness: 0.0, roughness: 0.65,
+                    clearcoat: 0.2, clearcoatRoughness: 0.4, envMapIntensity: 0.4
+                });
+                var ink = mphys({
+                    color: 0x303a4e, metalness: 0.05, roughness: 0.6
+                });
+                var goldRing = mphys({
+                    color: 0xe6c465, metalness: 0.7, roughness: 0.22,
+                    clearcoat: 0.8, clearcoatRoughness: 0.12, envMapIntensity: 1.0
+                });
+                var glass = mphys({
+                    color: 0xc8e0ff, metalness: 0.0, roughness: 0.08,
+                    transmission: 0.65, ior: 1.45, thickness: 0.4,
+                    clearcoat: 1.0, clearcoatRoughness: 0.05,
+                    transparent: true, opacity: 0.7
+                });
+                var handle = mphys({
+                    color: 0x3a2410, metalness: 0.1, roughness: 0.65, clearcoat: 0.35
+                });
+                // Documento de fondo
+                var doc = new THREE.Mesh(roundedBox(0.7, 0.92, 0.04, 0.03, 4), paperMat);
+                doc.rotation.x = -0.15;
+                doc.position.set(-0.05, -0.05, -0.05);
+                root.add(doc);
+                // LÃ­neas de texto en el documento
+                for (var k = 0; k < 5; k++) {
+                    var line = new THREE.Mesh(
+                        trackGeo(new THREE.BoxGeometry(k === 4 ? 0.32 : 0.46, 0.022, 0.01)),
+                        ink
+                    );
+                    line.position.set(-0.05 - (k === 4 ? 0.07 : 0), 0.22 - k * 0.1, 0.015);
+                    line.rotation.x = -0.15;
+                    root.add(line);
+                }
+                // Lupa: anillo dorado
+                var ring = new THREE.Mesh(
+                    trackGeo(new THREE.TorusGeometry(0.2, 0.025, 14, 28)),
+                    goldRing
+                );
+                ring.position.set(0.12, 0.16, 0.18);
+                ring.rotation.x = 0.1;
+                ring.rotation.y = 0.15;
+                root.add(ring);
+                // Lente de vidrio
+                var lens = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(0.2, 24, 18)),
+                    glass
+                );
+                lens.scale.set(1, 1, 0.18);
+                lens.position.set(0.12, 0.16, 0.18);
+                lens.rotation.x = 0.1;
+                lens.rotation.y = 0.15;
+                root.add(lens);
+                // UniÃ³n / soporte
+                var joint = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(0.04, 14, 12)),
+                    goldRing
+                );
+                joint.position.set(0.27, -0.0, 0.18);
+                root.add(joint);
+                // Mango
+                var handleM = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.035, 0.04, 0.42, 16)),
+                    handle
+                );
+                handleM.position.set(0.45, -0.22, 0.18);
+                handleM.rotation.z = -0.8;
+                root.add(handleM);
+                // Tapa del mango
+                var handleCap = new THREE.Mesh(
+                    trackGeo(new THREE.SphereGeometry(0.045, 14, 12)),
+                    goldRing
+                );
+                handleCap.position.set(0.6, -0.36, 0.18);
+                root.add(handleCap);
+                addContactShadow(root, 1.7, -0.5);
+                root.rotation.x = 0.08;
+            }
+
+            function buildClipboard(root) {
+                var board = mphys({
+                    color: 0x9a6a3a, metalness: 0.18, roughness: 0.5,
+                    clearcoat: 0.55, clearcoatRoughness: 0.2, envMapIntensity: 0.7
+                });
+                var metal = mphys({
+                    color: 0xdce2ec, metalness: 0.82, roughness: 0.2,
+                    clearcoat: 0.65, clearcoatRoughness: 0.16, envMapIntensity: 1.1
+                });
+                var paper = mphys({
+                    color: 0xfafcff, metalness: 0.0, roughness: 0.55,
+                    clearcoat: 0.25, clearcoatRoughness: 0.3
+                });
+                var ink = mphys({
+                    color: 0x3a4a66, metalness: 0.05, roughness: 0.55
+                });
+                var checkMat = mphys({
+                    color: 0x16a34a, emissive: 0x14532d, emissiveIntensity: 0.3,
+                    metalness: 0.25, roughness: 0.35, clearcoat: 0.55
+                });
+                var penMat = mphys({
+                    color: 0xb91c3c, metalness: 0.5, roughness: 0.3,
+                    clearcoat: 0.85, clearcoatRoughness: 0.1
+                });
+                // Tablero (orientaciÃ³n horizontal para wide)
+                var b = new THREE.Mesh(roundedBox(1.1, 0.6, 0.05, 0.04, 5), board);
+                root.add(b);
+                // Hoja
+                var p = new THREE.Mesh(roundedBox(0.96, 0.5, 0.012, 0.02, 3), paper);
+                p.position.z = 0.04;
+                root.add(p);
+                // Clip metÃ¡lico (lado izquierdo, ya que es horizontal)
+                var clipBack = new THREE.Mesh(roundedBox(0.06, 0.18, 0.07, 0.018, 3), metal);
+                clipBack.position.set(-0.51, 0, 0.04);
+                root.add(clipBack);
+                var clipLip = new THREE.Mesh(
+                    trackGeo(new THREE.TorusGeometry(0.03, 0.012, 8, 16, Math.PI)),
+                    metal
+                );
+                clipLip.rotation.y = Math.PI / 2;
+                clipLip.position.set(-0.5, 0, 0.085);
+                root.add(clipLip);
+                // LÃ­neas de texto
+                for (var i = 0; i < 4; i++) {
+                    var l = new THREE.Mesh(
+                        trackGeo(new THREE.BoxGeometry(0.6, 0.015, 0.01)),
+                        ink
+                    );
+                    l.position.set(0.08, 0.16 - i * 0.1, 0.052);
+                    root.add(l);
+                }
+                // Checkmarks (âœ“)
+                function check(x, y) {
+                    var c1 = new THREE.Mesh(
+                        trackGeo(new THREE.BoxGeometry(0.05, 0.018, 0.018)),
+                        checkMat
+                    );
+                    c1.position.set(x - 0.012, y - 0.012, 0.06);
+                    c1.rotation.z = -0.7;
+                    root.add(c1);
+                    var c2 = new THREE.Mesh(
+                        trackGeo(new THREE.BoxGeometry(0.09, 0.018, 0.018)),
+                        checkMat
+                    );
+                    c2.position.set(x + 0.025, y + 0.005, 0.06);
+                    c2.rotation.z = 0.6;
+                    root.add(c2);
+                }
+                check(-0.32, 0.16);
+                check(-0.32, 0.06);
+                check(-0.32, -0.04);
+                // Pluma diagonal
+                var penBody = new THREE.Mesh(
+                    trackGeo(new THREE.CylinderGeometry(0.028, 0.028, 0.46, 18)),
+                    penMat
+                );
+                penBody.position.set(0.32, -0.2, 0.1);
+                penBody.rotation.z = 1.0;
+                penBody.rotation.x = 0.1;
+                root.add(penBody);
+                var penTip = new THREE.Mesh(
+                    trackGeo(new THREE.ConeGeometry(0.028, 0.07, 14)),
+                    metal
+                );
+                penTip.position.set(0.5, -0.32, 0.1);
+                penTip.rotation.z = 1.0 + Math.PI;
+                penTip.rotation.x = 0.1;
+                root.add(penTip);
+                var penClip = new THREE.Mesh(
+                    trackGeo(new THREE.BoxGeometry(0.05, 0.012, 0.012)),
+                    metal
+                );
+                penClip.position.set(0.18, -0.1, 0.11);
+                penClip.rotation.z = 1.0;
+                root.add(penClip);
+                addContactShadow(root, 2.2, -0.35);
+                root.scale.setScalar(1.35);
+            }
+
+            var builders = {
+                gift: buildGift,
+                phone: buildPhone,
+                moto: buildMoto,
+                coordinator: buildCoordinator,
+                bell: buildBell,
+                network: buildNetwork,
+                study: buildStudy,
+                clipboard: buildClipboard
+            };
+
+            // =========================================================
+            // BARRAS 3D REALES (chart de reinversiÃ³n)
+            // =========================================================
+            function buildBarsScene(envTex) {
+                var sc = new THREE.Scene();
+                sc.environment = envTex;
+                addStudioLights(sc);
+
+                // Suelo reflectivo
+                var floor = new THREE.Mesh(
+                    trackGeo(new THREE.CircleGeometry(6, 48)),
+                    mphys({
+                        color: 0x070b18, metalness: 0.92, roughness: 0.35,
+                        clearcoat: 1.0, clearcoatRoughness: 0.32, envMapIntensity: 1.4
+                    })
+                );
+                floor.rotation.x = -Math.PI / 2;
+                floor.position.y = 0;
+                sc.add(floor);
+
+                // LÃ­neas de cuadrÃ­cula del piso
+                var gridMat = trackMat(new THREE.LineBasicMaterial({
+                    color: 0x4a6fa5, transparent: true, opacity: 0.18
+                }));
+                var gridGeo = trackGeo(new THREE.BufferGeometry());
+                var lp = [];
+                for (var gi = -3; gi <= 3; gi++) {
+                    lp.push(-3, 0.001, gi, 3, 0.001, gi);
+                    lp.push(gi, 0.001, -3, gi, 0.001, 3);
+                }
+                gridGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(lp), 3));
+                sc.add(new THREE.LineSegments(gridGeo, gridMat));
+
+                // Barras (datos editables: etiquetas .reinv-tag-val o REINV_CHART)
+                var values = [60, 126, 190];
+                var maxVal = 200;
+                if (window.REINV_CHART && window.REINV_CHART.values && window.REINV_CHART.values.length) {
+                    values = window.REINV_CHART.values.slice();
+                    maxVal = window.REINV_CHART.max || Math.max.apply(null, values.concat([1]));
+                } else {
+                    var tagVals = document.querySelectorAll(".reinv-tag-val");
+                    if (tagVals.length) {
+                        values = [];
+                        tagVals.forEach(function (el) {
+                            var t = (el.textContent || "").trim().toUpperCase();
+                            var m = t.match(/([\d.,]+)\s*M/);
+                            if (m) values.push(parseFloat(m[1].replace(/\./g, "").replace(",", ".")) || 0);
+                            else {
+                                var d = parseInt(t.replace(/[^\d]/g, ""), 10) || 0;
+                                values.push(d >= 1000000 ? Math.round(d / 1000000) : d);
+                            }
+                        });
+                        var peak = Math.max.apply(null, values.concat([1]));
+                        maxVal = Math.max(10, Math.ceil(peak / 10) * 10);
+                    }
+                }
+                var maxH = 1.7;
+                var colors = [
+                    { color: 0x4a6fa5, isGold: false, glowColor: 0x4a6fa5 },
+                    { color: 0x7ea2d8, isGold: false, glowColor: 0x7ea2d8 },
+                    { color: 0xd4af37, isGold: true,  glowColor: 0xd4af37 }
+                ];
+                var positions = [-1.25, 0, 1.25];
+                var bars = [];
+                for (var i = 0; i < 3; i++) {
+                    var h = (values[i] / maxVal) * maxH;
+                    var w = 0.65, d = 0.65;
+                    var geom = roundedBox(w, h, d, 0.05, 5);
+                    geom.translate(0, h / 2, 0);
+                    var c = colors[i];
+                    var mat = mphys({
+                        color: c.color,
+                        metalness: c.isGold ? 0.78 : 0.55,
+                        roughness: c.isGold ? 0.2 : 0.32,
+                        clearcoat: 0.85,
+                        clearcoatRoughness: 0.12,
+                        envMapIntensity: c.isGold ? 1.5 : 1.2
+                    });
+                    var bar = new THREE.Mesh(geom, mat);
+                    bar.position.set(positions[i], 0, 0);
+                    sc.add(bar);
+                    // Tapa con resplandor (top accent)
+                    var capMat = mphys({
+                        color: c.isGold ? 0xfff0b3 : 0xb8d4ff,
+                        emissive: c.glowColor,
+                        emissiveIntensity: c.isGold ? 0.55 : 0.3,
+                        metalness: c.isGold ? 0.85 : 0.6,
+                        roughness: 0.18,
+                        clearcoat: 0.85,
+                        clearcoatRoughness: 0.1
+                    });
+                    var cap = new THREE.Mesh(roundedBox(w * 1.02, 0.06, d * 1.02, 0.035, 4), capMat);
+                    cap.position.set(positions[i], h + 0.025, 0);
+                    sc.add(cap);
+                    bars.push({ mesh: bar, cap: cap, height: h });
+                }
+
+                // Plano trasero con lÃ­neas guÃ­a (sutiles)
+                var bgPanelMat = trackMat(new THREE.LineBasicMaterial({
+                    color: 0x7ea2d8, transparent: true, opacity: 0.12
+                }));
+                var bgPanelGeo = trackGeo(new THREE.BufferGeometry());
+                var bp = [];
+                for (var li = 1; li <= 4; li++) {
+                    var yL = (li / 4) * maxH;
+                    bp.push(-2.4, yL, -1.0, 2.4, yL, -1.0);
+                }
+                bgPanelGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(bp), 3));
+                sc.add(new THREE.LineSegments(bgPanelGeo, bgPanelMat));
+
+                return { scene: sc, bars: bars };
+            }
+
+            // =========================================================
+            // INICIALIZACIÃ“N: render compartido + dos canvases
+            // =========================================================
+            var reduceMotion = false;
+            try { reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+
+            // ----- Renderer y entorno para BARRAS -----
+            var barsCanvas = document.getElementById("bars-canvas");
+            var barsRenderer = barsCanvas ? new THREE.WebGLRenderer({
+                canvas: barsCanvas, antialias: true, alpha: true, powerPreference: "high-performance"
+            }) : null;
+            var envTex = null;
+
+            if (barsRenderer) {
+                barsRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                if (THREE.SRGBColorSpace) barsRenderer.outputColorSpace = THREE.SRGBColorSpace;
+                barsRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+                barsRenderer.toneMappingExposure = 1.25;
+
+                if (THREE.PMREMGenerator) {
+                    var pmrem = new THREE.PMREMGenerator(barsRenderer);
+                    pmrem.compileEquirectangularShader();
+                    var envScene = buildEnvScene();
+                    envTex = pmrem.fromScene(envScene, 0.04).texture;
+                    pmrem.dispose();
+                }
+
+                var barsData = buildBarsScene(envTex);
+                var barsScene = barsData.scene;
+                var barsCam = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+                barsCam.position.set(3.8, 3.2, 5.4);
+                barsCam.lookAt(0, 0.75, 0);
+
+                var barsT0 = performance.now();
+                function renderBars(now) {
+                    var t = ((now || performance.now()) - barsT0) / 1000;
+                    var host = barsCanvas.parentElement;
+                    var w = Math.max(host.clientWidth, 2);
+                    var h = Math.max(host.clientHeight, 2);
+                    barsRenderer.setSize(w, h, false);
+                    barsCam.aspect = w / h;
+                    if (!reduceMotion) {
+                        barsCam.position.x = 3.8 + Math.sin(t * 0.25) * 0.35;
+                        barsCam.position.z = 5.4 + Math.cos(t * 0.25) * 0.18;
+                        barsCam.position.y = 3.15 + Math.sin(t * 0.4) * 0.08;
+                        barsCam.lookAt(0, 0.75, 0);
+                        // Sutil pulsaciÃ³n de la barra dorada (cap)
+                        var cap = barsData.bars[2].cap.material;
+                        cap.emissiveIntensity = 0.5 + Math.sin(t * 1.6) * 0.18;
+                    }
+                    barsCam.updateProjectionMatrix();
+                    barsRenderer.setClearColor(0x000000, 0);
+                    barsRenderer.render(barsScene, barsCam);
+                }
+                function tickBars(now) {
+                    renderBars(now);
+                    if (!reduceMotion) requestAnimationFrame(tickBars);
+                }
+                if (reduceMotion) renderBars(performance.now());
+                else requestAnimationFrame(tickBars);
+
+                var roBars = typeof ResizeObserver !== "undefined" ? new ResizeObserver(function () {
+                    renderBars(performance.now());
+                }) : null;
+                if (roBars) roBars.observe(barsCanvas.parentElement);
+            }
+
+            // ----- Renderer para ICONOS (multiplexado scissor) -----
+            var iconsCanvas = document.getElementById("icons-canvas");
+            var iconsRenderer = iconsCanvas ? new THREE.WebGLRenderer({
+                canvas: iconsCanvas, antialias: true, alpha: true, powerPreference: "high-performance"
+            }) : null;
+
+            if (iconsRenderer) {
+                iconsRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                if (THREE.SRGBColorSpace) iconsRenderer.outputColorSpace = THREE.SRGBColorSpace;
+                iconsRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+                iconsRenderer.toneMappingExposure = 1.7;
+                iconsRenderer.autoClear = false;
+
+                // Si no se generÃ³ env con barsRenderer, lo generamos aquÃ­
+                if (!envTex && THREE.PMREMGenerator) {
+                    var pmrem2 = new THREE.PMREMGenerator(iconsRenderer);
+                    pmrem2.compileEquirectangularShader();
+                    var envSc2 = buildEnvScene();
+                    envTex = pmrem2.fromScene(envSc2, 0.04).texture;
+                    pmrem2.dispose();
+                }
+
+                var slots = document.querySelectorAll(".apoyo-vp[data-icon-kind]");
+                var views = [];
+                slots.forEach(function (el, idx) {
+                    var kind = el.getAttribute("data-icon-kind");
+                    var fn = builders[kind] || buildGift;
+                    var sc = new THREE.Scene();
+                    sc.environment = envTex;
+                    addStudioLights(sc);
+                    var group = new THREE.Group();
+                    fn(group);
+                    sc.add(group);
+                    var cam = new THREE.PerspectiveCamera(32, 1, 0.08, 24);
+                    // Distancia ajustada por tipo: motos y clipboard horizontales necesitan mÃ¡s zoom-out
+                    var dist = (kind === "moto" || kind === "clipboard") ? 2.3 : 1.85;
+                    cam.position.set(dist * 0.62, dist * 0.45, dist);
+                    cam.lookAt(0, 0.05, 0);
+                    views.push({
+                        elem: el,
+                        scene: sc,
+                        camera: cam,
+                        group: group,
+                        kind: kind,
+                        baseRy: idx * 0.35,
+                        spin: 0.45 + (idx % 4) * 0.06
+                    });
+                });
+
+                var iconsT0 = performance.now();
+                function renderIcons(now) {
+                    var t = ((now || performance.now()) - iconsT0) / 1000;
+                    // El canvas ocupa el host de la grilla; medimos su tamaÃ±o
+                    var hostEl = iconsCanvas.parentElement;
+                    var w = Math.max(hostEl.clientWidth, 2);
+                    var h = Math.max(hostEl.clientHeight, 2);
+                    iconsRenderer.setSize(w, h, false);
+                    var pr = iconsRenderer.getPixelRatio();
+                    iconsRenderer.setScissorTest(true);
+                    iconsRenderer.setClearColor(0x000000, 0);
+                    iconsRenderer.clear(true, true, true);
+
+                    var canvasRect = iconsCanvas.getBoundingClientRect();
+
+                    views.forEach(function (v, i) {
+                        var r = v.elem.getBoundingClientRect();
+                        var left = (r.left - canvasRect.left) * pr;
+                        var top = (r.top - canvasRect.top) * pr;
+                        var rw = r.width * pr;
+                        var rh = r.height * pr;
+                        var y = iconsRenderer.domElement.height - top - rh;
+                        if (rw < 2 || rh < 2) return;
+                        // El icono "gift" de la cabecera estÃ¡ fuera del host, no se renderiza
+                        if (r.bottom < canvasRect.top || r.top > canvasRect.bottom) return;
+                        iconsRenderer.setViewport(left, y, rw, rh);
+                        iconsRenderer.setScissor(left, y, rw, rh);
+                        v.camera.aspect = rw / rh;
+                        v.camera.updateProjectionMatrix();
+                        if (!reduceMotion) {
+                            v.group.rotation.y = v.baseRy + Math.sin(t * v.spin) * 0.55;
+                            v.group.rotation.x = Math.sin(t * 0.32 + i * 0.5) * 0.1;
+                        } else {
+                            v.group.rotation.y = v.baseRy + 0.3;
+                            v.group.rotation.x = 0.06;
+                        }
+                        iconsRenderer.render(v.scene, v.camera);
+                    });
+                }
+
+                // El icono "gift" (header) usa su propio mini-canvas independiente
+                // Para simplificar, lo dibujamos con un canvas oculto y lo proyectamos
+                // mediante un canvas dedicado dentro del slot
+                var headSlot = document.querySelector(".apoyos-head-slot");
+                var headRenderer = null;
+                var headScene = null, headCam = null, headGroup = null;
+                if (headSlot) {
+                    var headCanvas = document.createElement("canvas");
+                    headCanvas.style.position = "absolute";
+                    headCanvas.style.inset = "0";
+                    headCanvas.style.width = "100%";
+                    headCanvas.style.height = "100%";
+                    headSlot.appendChild(headCanvas);
+                    try {
+                        headRenderer = new THREE.WebGLRenderer({
+                            canvas: headCanvas, antialias: true, alpha: true
+                        });
+                        headRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                        if (THREE.SRGBColorSpace) headRenderer.outputColorSpace = THREE.SRGBColorSpace;
+                        headRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+                        headRenderer.toneMappingExposure = 1.7;
+                        headScene = new THREE.Scene();
+                        headScene.environment = envTex;
+                        addStudioLights(headScene);
+                        headGroup = new THREE.Group();
+                        buildGift(headGroup);
+                        headScene.add(headGroup);
+                        headCam = new THREE.PerspectiveCamera(32, 1, 0.08, 24);
+                        headCam.position.set(1.25, 0.85, 2.0);
+                        headCam.lookAt(0, 0.05, 0);
+                    } catch (e2) {
+                        headRenderer = null;
+                    }
+                }
+
+                function renderHead(now) {
+                    if (!headRenderer) return;
+                    var t = ((now || performance.now()) - iconsT0) / 1000;
+                    var hw = Math.max(headSlot.clientWidth, 2);
+                    var hh = Math.max(headSlot.clientHeight, 2);
+                    headRenderer.setSize(hw, hh, false);
+                    headCam.aspect = hw / hh;
+                    headCam.updateProjectionMatrix();
+                    if (!reduceMotion) {
+                        headGroup.rotation.y = Math.sin(t * 0.55) * 0.6;
+                        headGroup.rotation.x = Math.sin(t * 0.35) * 0.12;
+                    } else {
+                        headGroup.rotation.y = 0.3;
+                    }
+                    headRenderer.setClearColor(0x000000, 0);
+                    headRenderer.render(headScene, headCam);
+                }
+
+                function tickIcons(now) {
+                    renderIcons(now);
+                    renderHead(now);
+                    if (!reduceMotion) requestAnimationFrame(tickIcons);
+                }
+                if (reduceMotion) {
+                    renderIcons(performance.now());
+                    renderHead(performance.now());
+                } else {
+                    requestAnimationFrame(tickIcons);
+                }
+
+                var roIcons = typeof ResizeObserver !== "undefined" ? new ResizeObserver(function () {
+                    renderIcons(performance.now());
+                    renderHead(performance.now());
+                }) : null;
+                if (roIcons) roIcons.observe(iconsCanvas.parentElement);
+            }
+
+            window.addEventListener("beforeunload", function () {
+                disposables.geos.forEach(function (g) { if (g && g.dispose) g.dispose(); });
+                disposables.mats.forEach(function (m) { if (m && m.dispose) m.dispose(); });
+                disposables.tex.forEach(function (t) { if (t && t.dispose) t.dispose(); });
+                if (envTex && envTex.dispose) envTex.dispose();
+                if (barsRenderer) barsRenderer.dispose();
+                if (iconsRenderer) iconsRenderer.dispose();
+            }, { once: true });
+        })();
+    </script>
+</body>
+</html>
+
+
+

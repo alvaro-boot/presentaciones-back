@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>COOTRAVIR C.T.A. - Propuesta para Tacuara Club Residencial</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body.app-viewer {
+            height: 100%;
+        }
+
+        body.app-viewer {
+            font-family: var(--font-body, "Inter", system-ui, sans-serif);
+            background: #070b14;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .app-shell {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .deck-progress {
+            flex-shrink: 0;
+            height: 3px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .deck-progress-fill {
+            height: 100%;
+            width: calc(100% / 11);
+            background: linear-gradient(90deg, #4a6fa5, #d4af37);
+            transition: width 0.35s ease;
+        }
+
+        .app-main {
+            flex: 1;
+            min-height: 0;
+            position: relative;
+            background: #070b14;
+        }
+
+        #slideFrame {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+            background: #070b14;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        .app-footer {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 10px 16px 12px;
+            background: rgba(12, 20, 40, 0.96);
+            border-top: 1px solid rgba(212, 175, 55, 0.18);
+        }
+
+        .nav-button {
+            background: #0e2455;
+            color: #fff;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: #4a6fa5;
+        }
+
+        .nav-button:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8edf5;
+            font-family: var(--font-display, "Sora", sans-serif);
+            min-width: 8rem;
+            text-align: center;
+        }
+
+        .page-hint {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .page-hint kbd {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 0 2px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            font-family: inherit;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body class="app-viewer">
+    <div class="app-shell">
+        <div class="deck-progress" aria-hidden="true">
+            <div class="deck-progress-fill" id="deckProgressFill"></div>
+        </div>
+
+        <main class="app-main">
+            <iframe
+                id="slideFrame"
+                src="page_1.html"
+                title="Contenido de la propuesta">
+            </iframe>
+        </main>
+
+        <footer class="app-footer">
+            <button class="nav-button" id="prevBtn" type="button" title="Página anterior">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <span class="page-indicator">
+                Página <span id="currentSlide">1</span> de <span id="totalSlides">8</span>
+            </span>
+            <button class="nav-button" id="nextBtn" type="button" title="Página siguiente">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <span class="page-hint">
+                <kbd>←</kbd> <kbd>→</kbd> <kbd>Espacio</kbd>
+                <span style="margin: 0 0.35em;">·</span>
+                <kbd>Inicio</kbd> <kbd>Fin</kbd>
+            </span>
+        </footer>
+    </div>
+
+    <script>
+        const slides = [
+            "page_1.html",
+            "page_2.html",
+            "page_2b.html",
+            "mapa-pereira.html",
+            "page_3_operacional.html",
+            "page_beneficios_vigilancia.html",
+            "page_video.html",
+            "page_3.html",
+            "page_4.html",
+            "page_5.html",
+            "page_cierre.html"
+        ];
+
+        let currentSlideIndex = 0;
+        const slideFrame = document.getElementById("slideFrame");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const currentSlideSpan = document.getElementById("currentSlide");
+        const deckProgressFill = document.getElementById("deckProgressFill");
+        const totalSlidesSpan = document.getElementById("totalSlides");
+        totalSlidesSpan.textContent = String(slides.length);
+
+        function setDeckProgress(index) {
+            deckProgressFill.style.width = ((index + 1) / slides.length) * 100 + "%";
+        }
+
+        function updateSlide(index) {
+            if (index < 0 || index >= slides.length) return;
+
+            const next = slides[index];
+            const prevSrc = slideFrame.getAttribute("src") || "";
+            const isSame = prevSrc.endsWith(next);
+
+            if (!isSame) {
+                slideFrame.style.opacity = "0";
+                slideFrame.addEventListener(
+                    "load",
+                    () => {
+                        requestAnimationFrame(() => {
+                            slideFrame.style.opacity = "1";
+                        });
+                    },
+                    { once: true }
+                );
+                slideFrame.src = next;
+            }
+
+            currentSlideIndex = index;
+            currentSlideSpan.textContent = String(index + 1);
+            setDeckProgress(index);
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                updateSlide(currentSlideIndex + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                updateSlide(currentSlideIndex - 1);
+            }
+        }
+
+        nextBtn.addEventListener("click", nextSlide);
+        prevBtn.addEventListener("click", prevSlide);
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === "Home") {
+                e.preventDefault();
+                updateSlide(0);
+            } else if (e.key === "End") {
+                e.preventDefault();
+                updateSlide(slides.length - 1);
+            }
+        });
+
+        updateSlide(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="es" class="prop-fill">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Beneficios para el personal de vigilancia — COOTRAVIR</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body.prop-fill.page-ben-v2 .soc-body {
+            overflow: hidden;
+        }
+
+        body.prop-fill.page-ben-v2 .soc-body > .ben-doc {
+            flex: 1 1 0 !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .ben-doc {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .ben-layout {
+            flex: 1 1 0;
+            min-height: 0;
+            width: 100%;
+            display: grid;
+            gap: clamp(10px, 1.4vw, 16px);
+            grid-template-columns: 1fr;
+            grid-template-rows: minmax(200px, 32vh) minmax(0, 1fr);
+        }
+
+        @media (min-width: 1024px) {
+            .ben-layout {
+                grid-template-columns: minmax(260px, 34vw) minmax(0, 1fr);
+                grid-template-rows: 1fr;
+                align-items: stretch;
+            }
+        }
+
+        .ben-scene-col {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .ben-scene {
+            flex: 1 1 auto;
+            min-height: min(220px, 30vh);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: clamp(12px, 1.6vw, 18px);
+            border-radius: var(--radius-panel, 14px);
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 90% 80% at 50% 20%, rgba(74, 111, 165, 0.35), transparent 55%),
+                linear-gradient(165deg, rgba(10, 18, 36, 0.96) 0%, rgba(4, 8, 16, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                0 16px 48px rgba(0, 0, 0, 0.45);
+        }
+
+        @media (min-width: 1024px) {
+            .ben-scene {
+                min-height: 0;
+            }
+        }
+
+        .ben-scene-head {
+            flex-shrink: 0;
+            margin-bottom: 8px;
+        }
+
+        .ben-scene-kicker {
+            font-size: clamp(0.58rem, 1vw, 0.68rem);
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #5eead4;
+            font-family: var(--font-display);
+            margin: 0 0 4px;
+        }
+
+        .ben-scene-title {
+            margin: 0;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            line-height: 1.2;
+            color: var(--soc-text);
+            letter-spacing: -0.02em;
+        }
+
+        .ben-scene-title span {
+            color: var(--cootravir-gold-light);
+        }
+
+        .ben-scene-media {
+            flex: 1 1 0;
+            min-height: clamp(160px, 28vh, 280px);
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 70% 60% at 50% 40%, rgba(34, 211, 238, 0.1), transparent 62%),
+                linear-gradient(165deg, rgba(8, 14, 28, 0.9) 0%, rgba(4, 8, 16, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ben-scene-media--has-img .ben-scene-placeholder {
+            display: none;
+        }
+
+        .ben-scene-img {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 15%;
+            display: block;
+        }
+
+        .ben-scene-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            color: rgba(226, 232, 240, 0.55);
+            text-align: center;
+            z-index: 1;
+        }
+
+        .ben-scene-placeholder i {
+            font-size: clamp(3rem, 10vw, 4.5rem);
+            color: var(--cootravir-gold-light);
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.35));
+            opacity: 0.85;
+        }
+
+        .ben-scene-placeholder small {
+            font-size: clamp(0.68rem, 1.1vw, 0.78rem);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        #ben-3d-root {
+            display: none !important;
+        }
+
+        .ben-scene-hud {
+            flex-shrink: 0;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: clamp(0.58rem, 1vw, 0.68rem);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(226, 232, 240, 0.75);
+            font-family: var(--font-display);
+        }
+
+        .ben-scene-hud span:last-child {
+            color: #67e8f9;
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .ben-content-col {
+            min-width: 0;
+        }
+
+        .ben-panel {
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: clamp(12px, 1.8vw, 20px);
+            border-radius: var(--radius-panel, 14px);
+            background:
+                radial-gradient(100% 70% at 100% 0%, rgba(34, 211, 238, 0.06), transparent 50%),
+                linear-gradient(168deg, rgba(14, 24, 44, 0.94) 0%, rgba(6, 10, 20, 0.97) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .ben-panel-head {
+            flex-shrink: 0;
+        }
+
+        .ben-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 14px;
+            margin-bottom: 10px;
+        }
+
+        .ben-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #67e8f9;
+            border: 1px solid rgba(34, 211, 238, 0.4);
+            background: rgba(34, 211, 238, 0.08);
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-family: var(--font-display);
+        }
+
+        .ben-ref {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--soc-text-muted);
+            font-family: ui-monospace, "Cascadia Mono", monospace;
+            letter-spacing: 0.06em;
+        }
+
+        .ben-lead {
+            margin: 0 0 12px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.1vw, 1.35rem);
+            line-height: 1.2;
+            color: var(--soc-text);
+            letter-spacing: -0.02em;
+        }
+
+        .ben-lead span {
+            color: var(--cootravir-gold-light);
+        }
+
+        .ben-tabs {
+            flex-shrink: 0;
+            display: flex;
+            gap: 6px;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.38);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .ben-tab {
+            flex: 1 1 0;
+            min-width: 0;
+            border: none;
+            border-radius: 11px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.7rem, 1.25vw, 0.86rem);
+            line-height: 1.25;
+            color: var(--soc-text-muted);
+            background: transparent;
+            transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+        }
+
+        .ben-tab:hover {
+            color: var(--soc-text);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .ben-tab.is-active {
+            color: #fff;
+            background: linear-gradient(165deg, rgba(74, 111, 165, 0.55) 0%, rgba(14, 36, 85, 0.92) 100%);
+            box-shadow:
+                0 0 0 1px rgba(212, 175, 55, 0.35),
+                0 10px 28px rgba(0, 0, 0, 0.35);
+        }
+
+        .ben-tab:focus-visible {
+            outline: 2px solid rgba(34, 211, 238, 0.7);
+            outline-offset: 2px;
+        }
+
+        .ben-pages {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 2px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(212, 175, 55, 0.4) transparent;
+        }
+
+        .ben-pages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .ben-pages::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.35);
+            border-radius: 6px;
+        }
+
+        .ben-page {
+            display: none;
+        }
+
+        .ben-page.is-active {
+            display: block;
+        }
+
+        .ben-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        @media (min-width: 720px) {
+            .ben-cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .ben-cards {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        .ben-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(0, 0, 0, 0.28) 100%);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+            transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .ben-card:hover {
+            border-color: rgba(212, 175, 55, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .ben-card-ico {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--cootravir-gold-light);
+            background: linear-gradient(145deg, rgba(74, 111, 165, 0.45), rgba(14, 36, 85, 0.85));
+            border: 1px solid rgba(212, 175, 55, 0.28);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .ben-card h3 {
+            margin: 0 0 5px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.84rem, 1.4vw, 0.98rem);
+            line-height: 1.25;
+            color: var(--soc-text);
+        }
+
+        .ben-card p {
+            margin: 0;
+            font-size: clamp(0.76rem, 1.2vw, 0.88rem);
+            line-height: 1.5;
+            color: var(--soc-text-muted);
+        }
+
+        .ben-kpi {
+            text-align: center;
+            padding: 12px 12px 14px;
+            margin-bottom: 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            background: linear-gradient(165deg, rgba(212, 175, 55, 0.12) 0%, rgba(14, 36, 85, 0.55) 100%);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.08);
+        }
+
+        .ben-kpi-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--soc-text-muted);
+            margin-bottom: 5px;
+            font-family: var(--font-display);
+        }
+
+        .ben-kpi-val {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            color: var(--cootravir-gold-light);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+            text-shadow: 0 0 28px rgba(212, 175, 55, 0.25);
+        }
+
+        .ben-kpi-note {
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: var(--soc-text-muted);
+            line-height: 1.45;
+            max-width: 44ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ben-shift {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 11px 13px;
+            margin-bottom: 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            background: linear-gradient(120deg, rgba(34, 211, 238, 0.1) 0%, rgba(14, 36, 85, 0.45) 100%);
+        }
+
+        .ben-shift-ico {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #67e8f9;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            flex-shrink: 0;
+        }
+
+        .ben-shift h3 {
+            margin: 0 0 5px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #67e8f9;
+            font-family: var(--font-display);
+        }
+
+        .ben-shift .t {
+            margin: 0 0 5px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.88rem, 1.45vw, 1.02rem);
+            color: var(--soc-text);
+        }
+
+        .ben-shift .d {
+            margin: 0;
+            font-size: clamp(0.76rem, 1.15vw, 0.86rem);
+            line-height: 1.5;
+            color: var(--soc-text-muted);
+        }
+
+        .ben-ledger {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .ben-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px 12px;
+            padding: 8px 11px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .ben-row-text {
+            flex: 1 1 200px;
+            min-width: 0;
+        }
+
+        .ben-row-name {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.8rem, 1.3vw, 0.92rem);
+            color: var(--soc-text);
+            margin-bottom: 3px;
+        }
+
+        .ben-row-sub {
+            font-size: clamp(0.72rem, 1.1vw, 0.82rem);
+            line-height: 1.45;
+            color: var(--soc-text-muted);
+        }
+
+        .ben-row-val {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(0.95rem, 1.85vw, 1.15rem);
+            color: var(--cootravir-gold-light);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            padding: 3px 9px;
+            border-radius: 10px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+
+        .ben-foot {
+            flex-shrink: 0;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.68rem;
+            color: var(--soc-text-muted);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .soc-slide.ben-slide.deck-tech .soc-header h1 {
+            font-size: clamp(1rem, 2.2vw, 1.35rem);
+            line-height: 1.2;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ben-3d-anim {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="prop-fill page-ben-v2">
+    <div class="slide soc-slide deck-tech ben-slide">
+        <div class="deck-tech-bg" aria-hidden="true">
+            <div class="deck-tech-aurora"></div>
+            <div class="deck-tech-grid"></div>
+            <div class="deck-tech-noise"></div>
+            <div class="deck-tech-scan"></div>
+            <div class="deck-tech-particles">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="deck-tech-hud" aria-hidden="true"></div>
+        <header class="soc-header">
+            <h1>Beneficios para el personal de vigilancia</h1>
+            <div class="soc-header-brand">
+                <span>COOTRAVIR C.T.A.</span>
+                <span class="soc-chip">Talento humano</span>
+            </div>
+        </header>
+
+        <div class="soc-body">
+            <div class="doc-wrap ben-doc flex flex-col flex-1 min-h-0 px-3 py-2 sm:px-4 sm:py-3">
+                <div class="ben-layout">
+                    <aside class="ben-scene-col" aria-label="Figura 3D de guarda de seguridad">
+                        <div class="ben-scene soc-glass">
+                            <div class="ben-scene-head">
+                                <p class="ben-scene-kicker">Cobertura · compromiso</p>
+                                <h2 class="ben-scene-title">Protegemos <span>quien protege</span></h2>
+                            </div>
+                            <div class="ben-scene-media" id="ben-scene-media" role="img" aria-label="Personal de vigilancia COOTRAVIR">
+                                <span class="ben-scene-placeholder"><i class="fas fa-user-shield" aria-hidden="true"></i><small>Imagen del guarda (opcional)</small></span>
+                            </div>
+                            <div class="ben-scene-hud">
+                                <span>Guarda de seguridad</span><span>Fotografía</span>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <main class="ben-content-col flex flex-col min-h-0">
+                        <div class="ben-panel soc-glass">
+                            <div class="ben-panel-head">
+                                <div class="ben-meta">
+                                    <span class="ben-chip"><i class="fas fa-microchip" aria-hidden="true"></i> Panel RR.HH.</span>
+                                    <span class="ben-ref">REF_2025 · COP · confidencial</span>
+                                </div>
+                                <p class="ben-lead">Programas sociales, <span>reconocimientos</span> y referencia económica</p>
+                            </div>
+
+                            <div class="ben-tabs" role="tablist" aria-label="Secciones de beneficios">
+                                <button type="button" class="ben-tab is-active" role="tab" aria-selected="true" id="ben-tab-a" data-ben-tab="a">Programas y reconocimientos</button>
+                                <button type="button" class="ben-tab" role="tab" aria-selected="false" id="ben-tab-b" data-ben-tab="b">Valores 2025 y jornada</button>
+                            </div>
+
+                            <div class="ben-pages">
+                                <div class="ben-page is-active" id="ben-page-a" role="tabpanel" aria-labelledby="ben-tab-a" data-ben-page="a">
+                                    <div class="ben-cards" role="list">
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-heart"></i></div>
+                                            <div>
+                                                <h3>Fondo de bienestar social</h3>
+                                                <p>Aplica para auxilios de gafas e incapacidades.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-hands-holding"></i></div>
+                                            <div>
+                                                <h3>Fondo de solidaridad</h3>
+                                                <p>Auxilios por fallecimiento, copagos médicos y nacimiento de hijos.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-graduation-cap"></i></div>
+                                            <div>
+                                                <h3>Fondo de educación</h3>
+                                                <p>Aplica 100&nbsp;% para el curso obligatorio de reentrenamiento de guarda.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-shield-halved"></i></div>
+                                            <div>
+                                                <h3>Seguro de vida</h3>
+                                                <p>Cobertura activa para el asociado durante su vinculación.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-calendar-day"></i></div>
+                                            <div>
+                                                <h3>Cumpleaños del guarda</h3>
+                                                <p>Se otorgan 12 horas en efectivo como reconocimiento en la fecha de cumpleaños.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-award"></i></div>
+                                            <div>
+                                                <h3>Reconocimiento día del guarda</h3>
+                                                <p>Se entrega un obsequio o bono económico como reconocimiento a su labor.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-hand-holding-usd"></i></div>
+                                            <div>
+                                                <h3>Anticipos de compensación ordinaria</h3>
+                                                <p>Aplica para situaciones de emergencia debidamente justificadas.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-handshake"></i></div>
+                                            <div>
+                                                <h3>Convenios con terceros</h3>
+                                                <p>Incluye cooperativa La Rosa, Avanza, compra de electrodomésticos y ópticas.</p>
+                                            </div>
+                                        </article>
+                                        <article class="ben-card" role="listitem">
+                                            <div class="ben-card-ico" aria-hidden="true"><i class="fas fa-gift"></i></div>
+                                            <div>
+                                                <h3>Anchetas y obsequio navideño</h3>
+                                                <p>Entrega anual en temporada decembrina.</p>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </div>
+
+                                <div class="ben-page" id="ben-page-b" role="tabpanel" aria-labelledby="ben-tab-b" data-ben-page="b" hidden>
+                                    <div class="ben-kpi">
+                                        <div class="ben-kpi-label">Compensación mensual</div>
+                                        <div class="ben-kpi-val">$2.236.158</div>
+                                        <p class="ben-kpi-note">Incluye compensaciones ordinarias y extraordinarias.</p>
+                                    </div>
+
+                                    <div class="ben-shift">
+                                        <div class="ben-shift-ico" aria-hidden="true"><i class="fas fa-calendar-week"></i></div>
+                                        <div>
+                                            <h3>Jornada laboral</h3>
+                                            <p class="t">Turnos de 12 horas · esquema 4 × 2</p>
+                                            <p class="d">Incluye 02 días de día, 02 días de noche y 02 días de descanso.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="ben-ledger">
+                                        <div class="ben-row">
+                                            <div class="ben-row-text">
+                                                <div class="ben-row-name">Auxilio de gafas</div>
+                                                <div class="ben-row-sub">Aplica desde el cuarto mes de aporte. Para compra de gafas.</div>
+                                            </div>
+                                            <div class="ben-row-val">$170.820</div>
+                                        </div>
+                                        <div class="ben-row">
+                                            <div class="ben-row-text">
+                                                <div class="ben-row-name">Auxilio de incapacidad</div>
+                                                <div class="ben-row-sub">Desde el tercer día de incapacidad hasta 90 días al año. Incluye copagos familiares hasta el 30&nbsp;%.</div>
+                                            </div>
+                                            <div class="ben-row-val">$19.929</div>
+                                        </div>
+                                        <div class="ben-row">
+                                            <div class="ben-row-text">
+                                                <div class="ben-row-name">Auxilio de fallecimiento</div>
+                                                <div class="ben-row-sub">Desde el cuarto mes de aporte. Aplica por fallecimiento de familiares o calamidades.</div>
+                                            </div>
+                                            <div class="ben-row-val">$1.067.625</div>
+                                        </div>
+                                        <div class="ben-row">
+                                            <div class="ben-row-text">
+                                                <div class="ben-row-name">Auxilio nacido vivo</div>
+                                                <div class="ben-row-sub">Por nacimiento de hijo vivo.</div>
+                                            </div>
+                                            <div class="ben-row-val">$284.700</div>
+                                        </div>
+                                        <div class="ben-row">
+                                            <div class="ben-row-text">
+                                                <div class="ben-row-name">Valor turno adicional</div>
+                                                <div class="ben-row-sub">Aplica para turno de 12 horas.</div>
+                                            </div>
+                                            <div class="ben-row-val">$109.880</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="ben-foot">Políticas vigentes COOTRAVIR C.T.A. · cifras de referencia año 2025</p>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () { return; var root = document.getElementById("ben-3d-root");
+            if (!root || typeof THREE === "undefined") return;
+
+            var reduceMotion = false;
+            try {
+                reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            } catch (e0) {
+                /* */
+            }
+
+            var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.42;
+            renderer.setClearColor(0x000000, 0);
+            root.appendChild(renderer.domElement);
+
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera(38, 1, 0.08, 40);
+            var camDist = 2.55;
+            var camYaw = -0.58;
+            var camPitch = 0.34;
+            function setCameraOrbit() {
+                camera.position.set(
+                    Math.sin(camYaw) * Math.cos(camPitch) * camDist,
+                    Math.sin(camPitch) * camDist + 0.35,
+                    Math.cos(camYaw) * Math.cos(camPitch) * camDist
+                );
+                camera.lookAt(0, 0.72, 0);
+            }
+            setCameraOrbit();
+
+            scene.add(new THREE.HemisphereLight(0xb8d4ff, 0x0a0818, 0.42));
+            scene.add(new THREE.AmbientLight(0x8ab4e8, 0.09));
+            var key = new THREE.DirectionalLight(0xffffff, 1.45);
+            key.position.set(3.2, 5.2, 4.2);
+            scene.add(key);
+            var fill = new THREE.DirectionalLight(0x7dd3fc, 0.55);
+            fill.position.set(-4.2, 0.8, -2.4);
+            scene.add(fill);
+            var rim = new THREE.DirectionalLight(0xffe8a8, 0.55);
+            rim.position.set(-2.4, -1.2, 3.8);
+            scene.add(rim);
+            var bounce = new THREE.DirectionalLight(0x4466aa, 0.22);
+            bounce.position.set(0.5, -3.5, -1.2);
+            scene.add(bounce);
+            var spot = new THREE.SpotLight(0xffffff, 2.2, 18, 0.48, 0.5, 2);
+            spot.position.set(1.8, 2.4, 3.6);
+            spot.target.position.set(0, 0.75, 0);
+            scene.add(spot);
+            scene.add(spot.target);
+            var glint = new THREE.PointLight(0xe0f2ff, 0.85, 8, 2);
+            glint.position.set(1.2, 1.1, 2.2);
+            scene.add(glint);
+
+            var PhysMat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
+            var guardRoot = new THREE.Group();
+            scene.add(guardRoot);
+
+            var uniformMat = new PhysMat({
+                color: 0x132a48,
+                metalness: 0.42,
+                roughness: 0.34,
+                clearcoat: 0.35,
+                clearcoatRoughness: 0.28,
+                emissive: 0x040a14,
+                emissiveIntensity: 0.08
+            });
+            var vestMat = new PhysMat({
+                color: 0xf5d020,
+                emissive: 0xcc8800,
+                emissiveIntensity: 0.45,
+                metalness: 0.15,
+                roughness: 0.42,
+                clearcoat: 0.2,
+                clearcoatRoughness: 0.35
+            });
+            var skinMat = new PhysMat({
+                color: 0xd4a574,
+                metalness: 0.02,
+                roughness: 0.58,
+                clearcoat: 0.08,
+                clearcoatRoughness: 0.55
+            });
+            var capMat = new PhysMat({
+                color: 0x0f1f35,
+                metalness: 0.35,
+                roughness: 0.4,
+                clearcoat: 0.25,
+                clearcoatRoughness: 0.35
+            });
+            var darkMat = new PhysMat({
+                color: 0x0a0e14,
+                metalness: 0.25,
+                roughness: 0.55
+            });
+            var goldMat = new PhysMat({
+                color: 0xc9a227,
+                metalness: 0.65,
+                roughness: 0.28,
+                emissive: 0x3d3010,
+                emissiveIntensity: 0.15,
+                clearcoat: 0.4,
+                clearcoatRoughness: 0.22
+            });
+
+            var disposables = { geos: [], mats: [uniformMat, vestMat, skinMat, capMat, darkMat, goldMat], texs: [] };
+
+            function addMesh(geo, mat, x, y, z, rx, ry, rz, sx, sy, sz) {
+                var m = new THREE.Mesh(geo, mat);
+                m.position.set(x, y, z);
+                if (rx || ry || rz) m.rotation.set(rx || 0, ry || 0, rz || 0);
+                if (sx) m.scale.set(sx, sy || sx, sz || sx);
+                guardRoot.add(m);
+                disposables.geos.push(geo);
+                return m;
+            }
+
+            /* Piernas y botas (misma geometría compartida: solo un dispose por geo) */
+            var legGeo = new THREE.CylinderGeometry(0.095, 0.1, 0.5, 14);
+            addMesh(legGeo, uniformMat, -0.15, 0.38, 0, 0, 0, 0);
+            var legRight = new THREE.Mesh(legGeo, uniformMat);
+            legRight.position.set(0.15, 0.38, 0);
+            guardRoot.add(legRight);
+            var bootGeo = new THREE.BoxGeometry(0.2, 0.1, 0.28);
+            addMesh(bootGeo, darkMat, -0.15, 0.05, 0.04);
+            var bootRight = new THREE.Mesh(bootGeo, darkMat);
+            bootRight.position.set(0.15, 0.05, 0.04);
+            guardRoot.add(bootRight);
+
+            /* Torso y cinturón */
+            var torsoGeo = new THREE.BoxGeometry(0.5, 0.54, 0.28);
+            addMesh(torsoGeo, uniformMat, 0, 0.82, 0);
+            var beltGeo = new THREE.BoxGeometry(0.48, 0.08, 0.29);
+            addMesh(beltGeo, darkMat, 0, 0.58, 0);
+            var buckleGeo = new THREE.BoxGeometry(0.1, 0.06, 0.04);
+            addMesh(buckleGeo, goldMat, 0, 0.58, 0.16);
+
+            /* Franja reflectante (chaleco) */
+            var vestGeo = new THREE.BoxGeometry(0.52, 0.16, 0.12);
+            addMesh(vestGeo, vestMat, 0, 0.88, 0.12);
+
+            /* Hombros */
+            var shoulderGeo = new THREE.BoxGeometry(0.62, 0.14, 0.26);
+            addMesh(shoulderGeo, uniformMat, 0, 1.08, 0);
+
+            /* Brazos (grupos para balanceo) */
+            var armGeo = new THREE.CylinderGeometry(0.065, 0.07, 0.38, 10);
+            var armL = new THREE.Group();
+            armL.position.set(-0.34, 1.02, 0);
+            var armLMesh = new THREE.Mesh(armGeo, uniformMat);
+            armLMesh.position.set(0, -0.16, 0);
+            armLMesh.rotation.z = 0.42;
+            armL.add(armLMesh);
+            guardRoot.add(armL);
+            disposables.geos.push(armGeo);
+
+            var armR = new THREE.Group();
+            armR.position.set(0.34, 1.02, 0);
+            var armRMesh = new THREE.Mesh(armGeo, uniformMat);
+            armRMesh.position.set(0, -0.16, 0);
+            armRMesh.rotation.z = -0.42;
+            armR.add(armRMesh);
+            guardRoot.add(armR);
+
+            /* Radio portátil */
+            var radioGeo = new THREE.BoxGeometry(0.1, 0.22, 0.06);
+            addMesh(radioGeo, darkMat, -0.26, 0.62, 0.18, 0, 0.2, 0.15);
+
+            /* Cabeza y gorra tipo seguridad */
+            var headGeo = new THREE.SphereGeometry(0.15, 20, 16);
+            addMesh(headGeo, skinMat, 0, 1.22, 0);
+            var capBrimGeo = new THREE.CylinderGeometry(0.16, 0.14, 0.06, 18);
+            addMesh(capBrimGeo, capMat, 0, 1.32, 0.04, 0.12, 0, 0);
+            var capTopGeo = new THREE.CylinderGeometry(0.14, 0.16, 0.12, 18);
+            addMesh(capTopGeo, capMat, 0, 1.38, 0, 0, 0, 0);
+
+            guardRoot.position.set(0, 0, 0);
+            guardRoot.scale.setScalar(1.15);
+
+            var raf = null;
+            var t0 = performance.now();
+
+            function resize() {
+                var w = Math.max(root.clientWidth, 100);
+                var h = Math.max(root.clientHeight, 100);
+                renderer.setSize(w, h, false);
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+            }
+
+            function tick(now) {
+                raf = requestAnimationFrame(tick);
+                var t = (now - t0) / 1000;
+                if (!reduceMotion) {
+                    guardRoot.rotation.y = -0.48 + Math.sin(t * 0.38) * 0.34;
+                    guardRoot.rotation.x = 0.06 + Math.sin(t * 0.24) * 0.06;
+                    guardRoot.rotation.z = Math.sin(t * 0.17) * 0.03;
+                    guardRoot.position.y = Math.sin(t * 1.6) * 0.015;
+                    armL.rotation.x = Math.sin(t * 2.0) * 0.1;
+                    armR.rotation.x = -Math.sin(t * 2.0) * 0.1;
+                    camYaw = -0.58 + Math.sin(t * 0.18) * 0.12;
+                    camPitch = 0.32 + Math.sin(t * 0.14) * 0.05;
+                    setCameraOrbit();
+                } else {
+                    guardRoot.rotation.set(0.08, -0.52, 0);
+                    guardRoot.position.y = 0;
+                    armL.rotation.x = 0;
+                    armR.rotation.x = 0;
+                }
+                renderer.render(scene, camera);
+            }
+
+            resize();
+            requestAnimationFrame(function () {
+                resize();
+            });
+            raf = requestAnimationFrame(tick);
+
+            var ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(resize) : null;
+            if (ro) ro.observe(root);
+
+            window.addEventListener(
+                "beforeunload",
+                function () {
+                    if (raf) cancelAnimationFrame(raf);
+                    if (ro) ro.disconnect();
+                    disposables.geos.forEach(function (g) {
+                        if (g) g.dispose();
+                    });
+                    disposables.mats.forEach(function (m) {
+                        if (m) m.dispose();
+                    });
+                    disposables.texs.forEach(function (t) {
+                        if (t) t.dispose();
+                    });
+                    renderer.dispose();
+                },
+                { once: true }
+            );
+        })();
+
+        (function () {
+            var tabs = document.querySelectorAll("[data-ben-tab]");
+            var pages = document.querySelectorAll("[data-ben-page]");
+            var scrollEl = document.querySelector(".ben-pages");
+            if (!tabs.length || !pages.length) return;
+
+            function activate(key) {
+                tabs.forEach(function (t) {
+                    var on = t.getAttribute("data-ben-tab") === key;
+                    t.classList.toggle("is-active", on);
+                    t.setAttribute("aria-selected", on ? "true" : "false");
+                });
+                pages.forEach(function (p) {
+                    var on = p.getAttribute("data-ben-page") === key;
+                    p.classList.toggle("is-active", on);
+                    if (on) p.removeAttribute("hidden");
+                    else p.setAttribute("hidden", "hidden");
+                });
+                if (scrollEl) scrollEl.scrollTop = 0;
+            }
+
+            tabs.forEach(function (tab) {
+                tab.addEventListener("click", function () {
+                    activate(tab.getAttribute("data-ben-tab"));
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

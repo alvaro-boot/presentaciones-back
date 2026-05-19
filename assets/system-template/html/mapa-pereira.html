@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es" class="prop-fill">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mapa — Pereira, Risaralda | COOTRAVIR</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <style>
+        .mapa-page {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: var(--soc-bg-deep);
+        }
+        .mapa-top {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 14px;
+            background: linear-gradient(90deg, rgba(14, 36, 85, 0.98), rgba(10, 22, 48, 0.95));
+            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            z-index: 1100;
+        }
+        .mapa-top h1 {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--soc-text);
+        }
+        .mapa-top span {
+            font-size: 0.75rem;
+            color: var(--soc-text-muted);
+        }
+        .mapa-top kbd {
+            font-size: 0.68rem;
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-family: ui-monospace, monospace;
+        }
+        #map-wrap {
+            flex: 1 1 auto;
+            min-height: 0;
+            position: relative;
+            width: 100%;
+        }
+        .mapa-panel.mapa-panel--hidden {
+            display: none !important;
+        }
+        .mapa-fab-presentacion {
+            position: absolute;
+            z-index: 1100;
+            top: 12px;
+            right: 12px;
+            padding: 9px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            border-radius: 999px;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            background: rgba(7, 11, 20, 0.94);
+            color: var(--cootravir-gold-light, #f5d78e);
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+            font-family: var(--font-display, "Sora", system-ui, sans-serif);
+        }
+        .mapa-fab-presentacion:hover {
+            background: rgba(14, 36, 85, 0.96);
+            color: #fff;
+            border-color: rgba(212, 175, 55, 0.75);
+        }
+        .mapa-fab-presentacion[aria-pressed="true"] {
+            border-color: rgba(52, 211, 153, 0.65);
+            color: #a7f3d0;
+        }
+        #map {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a1628;
+        }
+        .mapa-pin {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mapa-pin-wrap .mapa-pin-lbl {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            padding: 2px 5px;
+            border-radius: 5px;
+            font-family: var(--font-body, "Inter", system-ui, sans-serif);
+            font-size: 9px;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+            pointer-events: none;
+        }
+        .mapa-pin-lbl--rojo {
+            background: rgba(7, 11, 20, 0.92);
+            color: #fecaca;
+            border: 1px solid rgba(220, 38, 38, 0.55);
+        }
+        .mapa-pin-lbl--azul {
+            background: rgba(7, 11, 20, 0.92);
+            color: #dbeafe;
+            border: 1px solid rgba(59, 130, 246, 0.55);
+            font-weight: 600;
+        }
+        .mapa-pin-lbl--otro {
+            background: rgba(7, 11, 20, 0.92);
+            color: #f1f5f9;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+        }
+        .mapa-moto-pin {
+            background: transparent !important;
+            border: none !important;
+        }
+        /* Tooltips (p. ej. nombre de ruta supervisión al pasar el ratón) */
+        .mapa-page .leaflet-tooltip.mapa-etiqueta {
+            background: rgba(7, 11, 20, 0.94) !important;
+            color: #f1f5f9 !important;
+            border: 1px solid rgba(255, 255, 255, 0.22) !important;
+            border-radius: 8px !important;
+            padding: 5px 10px !important;
+            font-family: var(--font-body, "Inter", system-ui, sans-serif) !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            line-height: 1.25 !important;
+            max-width: 200px !important;
+            white-space: normal !important;
+            text-align: center !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55) !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9) !important;
+            pointer-events: none !important;
+        }
+        .mapa-page .leaflet-tooltip.mapa-etiqueta--rojo {
+            font-size: 12px !important;
+            border-color: rgba(220, 38, 38, 0.75) !important;
+            color: #fecaca !important;
+        }
+        .mapa-page .leaflet-tooltip.mapa-etiqueta--azul {
+            font-size: 10px !important;
+            font-weight: 600 !important;
+            border-color: rgba(59, 130, 246, 0.7) !important;
+            color: #dbeafe !important;
+        }
+        .mapa-page .leaflet-tooltip.mapa-etiqueta--otro {
+            border-color: rgba(212, 175, 55, 0.45) !important;
+        }
+        /* Selector Satélite / Calles (Leaflet) */
+        .mapa-page .leaflet-control-layers {
+            background: rgba(7, 11, 20, 0.92) !important;
+            color: #e2e8f0 !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-radius: 10px !important;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+        }
+        .mapa-page .leaflet-control-layers-expanded {
+            padding: 8px 10px 10px !important;
+        }
+        .mapa-page .leaflet-control-layers label {
+            color: #e2e8f0 !important;
+            font-size: 12px !important;
+            font-weight: 600;
+        }
+        .mapa-page .leaflet-bottom.leaflet-left .leaflet-control {
+            margin-bottom: 12px;
+        }
+        .mapa-panel {
+            position: absolute;
+            z-index: 1000;
+            top: 12px;
+            left: 12px;
+            max-width: min(380px, calc(100vw - 24px));
+            max-height: calc(100vh - 88px);
+            overflow-y: auto;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(7, 11, 20, 0.88);
+            border: 1px solid rgba(212, 175, 55, 0.22);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+            color: var(--soc-text);
+            font-size: 0.8rem;
+        }
+        .mapa-in {
+            width: 100%;
+            margin-top: 4px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #e2e8f0;
+            font-size: 12px;
+        }
+        .mapa-ed-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        .mapa-ed-row label {
+            margin: 0;
+            cursor: default;
+            color: var(--soc-text-muted);
+            font-size: 0.72rem;
+        }
+        .mapa-ed-presets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+            align-items: center;
+        }
+        .ed-preset {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        .ed-preset:hover {
+            transform: scale(1.08);
+        }
+        .mapa-ed-btn {
+            margin-top: 8px;
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            background: rgba(14, 36, 85, 0.9);
+            color: #f8fafc;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .mapa-ed-btn:hover {
+            background: rgba(74, 111, 165, 0.95);
+        }
+        .mapa-ed-btn--active {
+            background: rgba(212, 175, 55, 0.25);
+            border-color: var(--cootravir-gold-light);
+        }
+        .mapa-ed-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .mapa-ed-actions .mapa-ed-btn2 {
+            width: 100%;
+            padding: 6px 8px;
+            font-size: 11px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.25);
+            color: #cbd5e1;
+            cursor: pointer;
+        }
+        .mapa-ed-actions .mapa-ed-btn2:hover {
+            border-color: rgba(212, 175, 55, 0.35);
+            color: #fff;
+        }
+        #ed-lista,
+        #ed-rutas-lista {
+            list-style: none;
+            margin: 8px 0 0 0;
+            padding: 0;
+            max-height: 160px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        #ed-rutas-lista {
+            max-height: 140px;
+        }
+        .mapa-ed-li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 11px;
+        }
+        .mapa-ed-li:last-child {
+            border-bottom: none;
+        }
+        .mapa-ed-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #0a1628;
+            flex-shrink: 0;
+        }
+        .mapa-ed-li-text {
+            flex: 1;
+            min-width: 0;
+            color: var(--soc-text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .mapa-ed-del {
+            flex-shrink: 0;
+            padding: 2px 8px;
+            font-size: 10px;
+            border-radius: 6px;
+            border: none;
+            background: rgba(127, 29, 29, 0.5);
+            color: #fecaca;
+            cursor: pointer;
+        }
+        .mapa-ed-del:hover {
+            background: rgba(185, 28, 28, 0.75);
+        }
+        .mapa-ed-empty {
+            padding: 10px;
+            color: var(--soc-text-muted);
+            font-size: 11px;
+        }
+        .mapa-panel h2 {
+            margin: 0 0 8px 0;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--cootravir-gold-light);
+        }
+        .mapa-capas-hint {
+            margin: 0 0 8px;
+            font-size: 0.72rem;
+            color: var(--soc-text-muted);
+            line-height: 1.35;
+        }
+        .mapa-panel label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            cursor: pointer;
+            color: var(--soc-text-muted);
+        }
+        .mapa-panel input[type="checkbox"] {
+            accent-color: var(--cootravir-gold);
+        }
+        .mapa-panel small {
+            display: block;
+            margin-top: 10px;
+            line-height: 1.35;
+            color: var(--soc-text-muted);
+        }
+        #map-status {
+            margin-top: 8px;
+            font-size: 0.72rem;
+            color: var(--soc-text-muted);
+        }
+        #map-color-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        #map-color-row input[type="color"],
+        #map-color-row-ruta input[type="color"] {
+            width: 44px;
+            height: 36px;
+            padding: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+        }
+        #map-color-row-ruta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="prop-fill">
+    <div class="slide mapa-page deck-tech">
+        <div class="deck-tech-bg" aria-hidden="true">
+            <div class="deck-tech-aurora"></div>
+            <div class="deck-tech-grid"></div>
+            <div class="deck-tech-noise"></div>
+            <div class="deck-tech-scan"></div>
+            <div class="deck-tech-particles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="deck-tech-hud" aria-hidden="true"></div>
+        <header class="mapa-top">
+            <h1>Pereira · Risaralda</h1>
+            <span>Conjuntos · portería/ronda · <strong>Rutas supervisión</strong> (<code>data/rutas-supervision.json</code>) · Presentación: botón arriba a la derecha o <kbd>P</kbd> · <code>?presentacion=1</code></span>
+        </header>
+        <div id="map-wrap">
+            <button type="button" id="mapa-btn-presentacion" class="mapa-fab-presentacion" aria-pressed="false" title="Ocultar panel para mostrar solo el mapa a clientes">Presentación</button>
+            <div id="map" role="application" aria-label="Mapa de Pereira"></div>
+            <div class="mapa-panel">
+                <h2>Capas</h2>
+                <p class="mapa-capas-hint">Fondo: use el control <strong>abajo a la izquierda</strong> (Satélite o Calles).</p>
+                <label><input type="checkbox" id="capa-puntos" checked/> Marcadores</label>
+                <label><input type="checkbox" id="capa-ruta" checked/> Perímetro rojo y áreas azules</label>
+                <label><input type="checkbox" id="capa-supervision" checked/> Rutas supervisión (motos)</label>
+                <p id="map-status">Cargando…</p>
+                <small>
+                    Rutas de monitoreo en <strong>data/rutas-supervision.json</strong>: array <code>rutas</code>, cada una con <code>coords</code> [[lat,lng], …], opcional <code>paradas</code> [{ <code>lat</code>, <code>lng</code>, <code>nombre</code> } o [lat,lng,"nombre"]], <code>nombre</code>, <code>color</code> opcional, <code>cicloSegundos</code> (duración del recorrido), <code>faseInicial</code> 0–1 para desfasar motos. Estilo global en <code>config-mapa.json</code> → <code>supervision</code>.
+                </small>
+                <small style="margin-top:8px">
+                    En <strong>data/puntos-pereira.json</strong>: <strong>conjunto</strong> (rojo, <code>id</code> y <code>orden</code> para el perímetro entre rojos).
+                    <strong>porteria</strong> / <strong>ronda</strong> (azul, <code>conjuntoId</code> = <code>id</code> del conjunto): con 3 o más azules del mismo conjunto se cierra un polígono y se rellena con color claro; con 2, solo línea entre ellos; con 1, línea al rojo. El <strong>nombre</strong> se muestra junto al punto solo en <strong>portería</strong> y <strong>conjunto</strong>; los puntos <strong>ronda</strong> solo muestran el círculo (el nombre sigue en el popup al hacer clic).
+                </small>
+                <small style="margin-top:8px">
+                    Opcional en cada punto: <code>color</code> en hexadecimal (<code>#dc2626</code>). Si no va, se usan los colores por tipo del archivo de configuración.
+                </small>
+                <small style="margin-top:8px">
+                    <strong>Editor:</strong> los cambios se guardan en este navegador (localStorage: puntos y rutas por separado). Use <strong>Descargar JSON</strong> para copiar <code>puntos-pereira.json</code> o <strong>Descargar JSON (rutas)</strong> para <code>rutas-supervision.json</code>. <strong>Solo archivo del servidor</strong> / <strong>Solo archivo rutas del servidor</strong> descartan la copia local de cada uno.
+                </small>
+
+                <h2 style="margin-top:14px">Añadir puntos</h2>
+                <div class="mapa-ed-row">
+                    <label for="ed-nombre">Nombre (mapa: conjunto y portería; ronda solo en popup)</label>
+                    <input type="text" id="ed-nombre" class="mapa-in" placeholder="Ej. Tacuara Club" maxlength="120"/>
+                </div>
+                <div class="mapa-ed-row">
+                    <label>Color del marcador</label>
+                    <div id="map-color-row">
+                        <input type="color" id="ed-color" value="#dc2626" title="Paleta"/>
+                        <input type="text" id="ed-color-hex" class="mapa-in" style="margin-top:0;flex:1" value="#dc2626" maxlength="7" spellcheck="false"/>
+                    </div>
+                    <div class="mapa-ed-presets">
+                        <button type="button" class="ed-preset" data-c="#dc2626" style="background:#dc2626" title="Rojo"></button>
+                        <button type="button" class="ed-preset" data-c="#2563eb" style="background:#2563eb" title="Azul"></button>
+                        <button type="button" class="ed-preset" data-c="#16a34a" style="background:#16a34a" title="Verde"></button>
+                        <button type="button" class="ed-preset" data-c="#ca8a04" style="background:#ca8a04" title="Ámbar"></button>
+                        <button type="button" class="ed-preset" data-c="#9333ea" style="background:#9333ea" title="Violeta"></button>
+                        <button type="button" class="ed-preset" data-c="#64748b" style="background:#64748b" title="Gris"></button>
+                    </div>
+                </div>
+                <div class="mapa-ed-row">
+                    <label for="ed-tipo">Tipo</label>
+                    <select id="ed-tipo" class="mapa-in" style="margin-top:4px">
+                        <option value="conjunto">conjunto</option>
+                        <option value="porteria">portería</option>
+                        <option value="ronda">ronda</option>
+                    </select>
+                </div>
+                <div id="ed-wrap-conjunto">
+                    <div class="mapa-ed-row">
+                        <label for="ed-id"><code>id</code> del conjunto</label>
+                        <input type="text" id="ed-id" class="mapa-in" placeholder="c1" spellcheck="false"/>
+                    </div>
+                    <div class="mapa-ed-row">
+                        <label for="ed-orden"><code>orden</code> (perímetro entre rojos)</label>
+                        <input type="number" id="ed-orden" class="mapa-in" min="1" step="1" placeholder="1"/>
+                    </div>
+                </div>
+                <div id="ed-wrap-satelite" style="display:none">
+                    <div class="mapa-ed-row">
+                        <label for="ed-conjunto-id"><code>conjuntoId</code> (id del conjunto padre)</label>
+                        <input type="text" id="ed-conjunto-id" class="mapa-in" placeholder="c1" spellcheck="false"/>
+                    </div>
+                </div>
+                <button type="button" id="ed-btn-modo-clic" class="mapa-ed-btn">Añadir en el siguiente clic en el mapa</button>
+                <div class="mapa-ed-actions">
+                    <button type="button" id="ed-guardar-ls" class="mapa-ed-btn2">Guardar en el navegador</button>
+                    <button type="button" id="ed-descargar" class="mapa-ed-btn2">Descargar JSON</button>
+                    <label class="mapa-ed-btn2" style="text-align:center;margin:0">
+                        Importar JSON
+                        <input type="file" id="ed-importar" accept=".json,application/json" hidden/>
+                    </label>
+                    <button type="button" id="ed-reset-servidor" class="mapa-ed-btn2">Solo archivo del servidor (borrar copia local)</button>
+                </div>
+                <h3 style="margin:12px 0 0 0;font-size:0.8rem;font-family:var(--font-display);color:var(--cootravir-gold-light);">Puntos (<span id="ed-count">0</span>)</h3>
+                <ul id="ed-lista"></ul>
+
+                <h2 style="margin-top:14px">Rutas de supervisión</h2>
+                <p style="margin:0;font-size:0.72rem;color:var(--soc-text-muted);line-height:1.35">
+                    Elija nombre y color; marque al menos <strong>dos</strong> vértices en el mapa. Opcional: duración del ciclo en segundos (mín. 15). Se guarda en este navegador (localStorage); use descarga/importar para llevar el JSON al proyecto.
+                </p>
+                <div class="mapa-ed-row">
+                    <label for="ed-ruta-nombre">Nombre de la ruta</label>
+                    <input type="text" id="ed-ruta-nombre" class="mapa-in" placeholder="Ej. Ronda sector norte" maxlength="120"/>
+                </div>
+                <div class="mapa-ed-row">
+                    <label>Color (línea y moto)</label>
+                    <div id="map-color-row-ruta">
+                        <input type="color" id="ed-ruta-color" value="#c4a035" title="Paleta"/>
+                        <input type="text" id="ed-ruta-color-hex" class="mapa-in" style="margin-top:0;flex:1" value="#c4a035" maxlength="7" spellcheck="false"/>
+                    </div>
+                    <div class="mapa-ed-presets">
+                        <button type="button" class="ed-preset ed-preset-ruta" data-c="#c4a035" style="background:#c4a035" title="Dorado"></button>
+                        <button type="button" class="ed-preset ed-preset-ruta" data-c="#22c55e" style="background:#22c55e" title="Verde"></button>
+                        <button type="button" class="ed-preset ed-preset-ruta" data-c="#3b82f6" style="background:#3b82f6" title="Azul"></button>
+                        <button type="button" class="ed-preset ed-preset-ruta" data-c="#a855f7" style="background:#a855f7" title="Violeta"></button>
+                        <button type="button" class="ed-preset ed-preset-ruta" data-c="#f97316" style="background:#f97316" title="Naranja"></button>
+                        <button type="button" class="ed-preset ed-preset-ruta" data-c="#ec4899" style="background:#ec4899" title="Rosa"></button>
+                    </div>
+                </div>
+                <div class="mapa-ed-row">
+                    <label for="ed-ruta-ciclo"><code>cicloSegundos</code> (vacío = valor de configuración)</label>
+                    <input type="number" id="ed-ruta-ciclo" class="mapa-in" min="15" step="1" placeholder=""/>
+                </div>
+                <p style="margin:6px 0 0;font-size:0.7rem;color:var(--soc-text-muted)">Vértices del trazo: <strong id="ed-ruta-vertices-count">0</strong> · Paradas: <strong id="ed-ruta-paradas-count">0</strong></p>
+                <button type="button" id="ed-btn-ruta-clic" class="mapa-ed-btn">Añadir vértices en el mapa (varios clics)</button>
+                <button type="button" id="ed-btn-ruta-parada" class="mapa-ed-btn" style="margin-top:6px">Añadir puntos de parada (clics en el mapa)</button>
+                <p style="margin:4px 0 0;font-size:0.65rem;color:var(--soc-text-muted);line-height:1.35">Las paradas se guardan en <code>paradas</code> (donde el supervisor se detiene). Nombres por defecto Parada 1, 2…; edítelos en el JSON si lo necesita.</p>
+                <div class="mapa-ed-actions" style="margin-top:8px">
+                    <button type="button" id="ed-ruta-deshacer" class="mapa-ed-btn2">Deshacer último vértice</button>
+                    <button type="button" id="ed-ruta-deshacer-parada" class="mapa-ed-btn2">Quitar última parada</button>
+                    <button type="button" id="ed-ruta-cancelar" class="mapa-ed-btn2">Cancelar trazo</button>
+                    <button type="button" id="ed-ruta-guardar" class="mapa-ed-btn2" style="background:rgba(14, 36, 85, 0.75);color:#f8fafc;border-color:rgba(212, 175, 55, 0.4)">Guardar ruta</button>
+                </div>
+                <div class="mapa-ed-actions">
+                    <button type="button" id="ed-descargar-rutas" class="mapa-ed-btn2">Descargar JSON (rutas)</button>
+                    <label class="mapa-ed-btn2" style="text-align:center;margin:0">
+                        Importar JSON (rutas)
+                        <input type="file" id="ed-importar-rutas" accept=".json,application/json" hidden/>
+                    </label>
+                    <button type="button" id="ed-reset-rutas-servidor" class="mapa-ed-btn2">Solo archivo rutas del servidor</button>
+                </div>
+                <h3 style="margin:12px 0 0 0;font-size:0.8rem;font-family:var(--font-display);color:var(--cootravir-gold-light);">Rutas (<span id="ed-ruta-count">0</span>)</h3>
+                <ul id="ed-rutas-lista"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="js/mapa-pereira.js"></script>
+</body>
+</html>

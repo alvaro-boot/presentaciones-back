@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es" class="prop-fill">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Estructura Operativa y Reconocimiento Regional</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <style>
+        @keyframes p2-fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes p2-shimmer {
+            0% {
+                background-position: 120% 50%;
+            }
+            100% {
+                background-position: -20% 50%;
+            }
+        }
+
+        .p2-donut-shell {
+            flex: 1 1 0;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .p2-donut-head {
+            flex-shrink: 0;
+        }
+
+        .p2-donut-body {
+            flex: 1 1 0;
+            min-height: min(52vh, 440px);
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: minmax(220px, 1fr) auto;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        @media (min-width: 900px) {
+            .p2-donut-body {
+                grid-template-columns: 1fr min(280px, 34%);
+                grid-template-rows: 1fr;
+                min-height: min(48vh, 400px);
+            }
+        }
+
+        .p2-chart3d-wrap {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 240px;
+            height: 100%;
+            background:
+                radial-gradient(ellipse 90% 80% at 50% 85%, rgba(74, 111, 165, 0.22), transparent 55%),
+                linear-gradient(180deg, rgba(10, 22, 40, 0.95) 0%, rgba(4, 8, 16, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .p2-chart3d-wrap canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .p2-chart3d-hud {
+            position: absolute;
+            inset: auto 10px 10px 10px;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .p2-chart3d-hud span {
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(232, 237, 245, 0.55);
+            font-family: var(--font-display);
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .p2-leg-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(165deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.32) 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .p2-leg-title {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cootravir-gold-light);
+            margin: 0 0 4px;
+        }
+
+        .p2-leg-total {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+            color: var(--soc-text);
+            line-height: 1.1;
+            margin: 0 0 2px;
+        }
+
+        .p2-leg-sub {
+            font-size: 0.72rem;
+            color: var(--soc-text-muted);
+            margin: 0 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .p2-leg-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .p2-leg-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .p2-leg-row:hover {
+            border-color: rgba(212, 175, 55, 0.25);
+            background: rgba(212, 175, 55, 0.06);
+        }
+
+        .p2-leg-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .p2-leg-txt {
+            flex: 1;
+            min-width: 0;
+            font-size: clamp(0.78rem, 1.25vw, 0.9rem);
+            font-weight: 600;
+            color: var(--soc-text);
+            line-height: 1.25;
+        }
+
+        .p2-leg-pct {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--cootravir-gold-light);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .p2-reveal {
+            animation: p2-fade-up 0.7s var(--deck-3d-ease, cubic-bezier(0.22, 1, 0.36, 1)) both;
+        }
+
+        .p2-reveal--1 {
+            animation-delay: 0.05s;
+        }
+        .p2-reveal--2 {
+            animation-delay: 0.12s;
+        }
+        .p2-reveal--3 {
+            animation-delay: 0.18s;
+        }
+
+        .p2-kpi-tile {
+            transform-style: preserve-3d;
+            transition: transform 0.4s var(--deck-3d-ease, cubic-bezier(0.22, 1, 0.36, 1)), box-shadow 0.4s ease;
+        }
+
+        .p2-kpi-tile:hover {
+            transform: translateY(-4px) translateZ(10px);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .p2-carousel {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        .p2-carousel-viewport {
+            position: relative;
+            flex: 1 1 auto;
+            min-height: clamp(200px, 34vh, 400px);
+            margin-top: 8px;
+        }
+
+        .p2-carousel-slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 2px;
+            opacity: 0;
+            transform: translateX(22px) scale(0.98);
+            transition:
+                opacity 0.5s var(--deck-3d-ease, cubic-bezier(0.22, 1, 0.36, 1)),
+                transform 0.5s var(--deck-3d-ease, cubic-bezier(0.22, 1, 0.36, 1));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .p2-carousel-slide.is-active {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            pointer-events: auto;
+            z-index: 1;
+        }
+
+        .p2-photo-frame {
+            position: relative;
+            flex: 1 1 auto;
+            min-height: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: linear-gradient(165deg, #0f1a32 0%, #0a1628 55%, #070b14 100%);
+            transform-style: preserve-3d;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .p2-photo-frame::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.07) 45%, transparent 70%);
+            background-size: 200% 100%;
+            animation: p2-shimmer 5s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.45;
+        }
+
+        .p2-photo-img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            object-fit: cover;
+            object-position: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .p2-carousel-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+            flex-shrink: 0;
+        }
+
+        .p2-carousel-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .p2-carousel-dot[aria-current="true"] {
+            background: linear-gradient(135deg, var(--cootravir-gold-light), var(--cootravir-blue-light));
+            transform: scale(1.25);
+            box-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+        }
+
+        .p2-carousel-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(12, 20, 40, 0.85);
+            color: var(--soc-text);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .p2-carousel-btn:hover {
+            background: rgba(74, 111, 165, 0.45);
+            border-color: rgba(212, 175, 55, 0.35);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .p2-reveal,
+            .p2-reveal--1,
+            .p2-reveal--2,
+            .p2-reveal--3 {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .p2-photo-frame::before {
+                animation: none;
+            }
+            .p2-carousel-slide {
+                transition: opacity 0.2s ease;
+            }
+            .p2-kpi-tile:hover {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="prop-fill">
+    <div class="slide soc-slide deck-tech">
+        <div class="deck-tech-bg" aria-hidden="true">
+            <div class="deck-tech-aurora"></div>
+            <div class="deck-tech-grid"></div>
+            <div class="deck-tech-noise"></div>
+            <div class="deck-tech-scan"></div>
+            <div class="deck-tech-particles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="deck-tech-hud" aria-hidden="true"></div>
+        <header class="soc-header">
+            <h1>Estructura operativa y reconocimiento regional</h1>
+            <div class="soc-header-brand">
+                <span>COOTRAVIR C.T.A.</span>
+                <span class="soc-chip">Seguridad privada</span>
+            </div>
+        </header>
+
+        <div class="soc-body">
+            <div class="doc-wrap flex flex-col flex-1 min-h-0 gap-4">
+                <div class="flex flex-col lg:grid lg:grid-cols-12 lg:gap-4 gap-4 flex-1 min-h-0">
+                    <div class="lg:col-span-5 flex flex-col min-h-0 order-2 lg:order-1">
+                        <div class="soc-glass p-4 sm:p-5 p2-carousel p2-reveal p2-reveal--1 flex-1 flex flex-col min-h-0">
+                            <p class="text-xs font-bold m-0 uppercase tracking-widest shrink-0" style="color: var(--cootravir-gold-light); letter-spacing: 0.14em;">Presencia física</p>
+
+                            <div class="p2-carousel-viewport" id="p2CarouselViewport">
+                                <div class="p2-carousel-slide is-active" data-p2-slide="0" role="group" aria-roledescription="slide" aria-label="Sede principal">
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <i class="fas fa-map-marker-alt text-sm" style="color: var(--cootravir-gold-light);"></i>
+                                        <h3 class="text-sm sm:text-base font-bold m-0 uppercase tracking-wide" style="font-family: var(--font-display); color: var(--soc-text);">Sede principal</h3>
+                                    </div>
+                                    <p class="text-xs sm:text-sm m-0 shrink-0" style="color: var(--soc-text-muted);">Cl. 8 Este #12b-20, Pereira</p>
+                                    <div class="p2-photo-frame flex-1 min-h-0">
+                                        <img src="images/edificio-cootravir.jpeg" alt="Fachada sede COOTRAVIR" class="p2-photo-img" onerror="this.style.display='none'"/>
+                                    </div>
+                                </div>
+                                <div class="p2-carousel-slide" data-p2-slide="1" role="group" aria-roledescription="slide" aria-label="Nuestro equipo">
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <i class="fas fa-users text-sm" style="color: var(--cootravir-gold-light);"></i>
+                                        <h3 class="text-sm sm:text-base font-bold m-0 uppercase tracking-wide" style="font-family: var(--font-display); color: var(--soc-text);">Nuestro equipo</h3>
+                                    </div>
+                                    <p class="text-xs sm:text-sm m-0 shrink-0" style="color: var(--soc-text-muted);">Profesionales comprometidos con la seguridad de nuestros clientes</p>
+                                    <div class="p2-photo-frame flex-1 min-h-0">
+                                        <img src="images/equipo-unicentro.jpeg" alt="Equipo COOTRAVIR" class="p2-photo-img" onerror="this.style.display='none'"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p2-carousel-nav">
+                                <button type="button" class="p2-carousel-btn" id="p2CarPrev" aria-label="Anterior">
+                                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                                </button>
+                                <div class="flex gap-2 items-center" id="p2CarDots" role="tablist" aria-label="Seleccionar slide"></div>
+                                <button type="button" class="p2-carousel-btn" id="p2CarNext" aria-label="Siguiente">
+                                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 flex flex-col gap-4 min-h-0 order-1 lg:order-2">
+                        <div class="soc-glass p-4 sm:p-5 p2-reveal p2-reveal--2">
+                            <div class="flex items-start gap-3 mb-3">
+                                <i class="fas fa-building text-2xl mt-0.5 shrink-0" style="color: var(--cootravir-gold-light);"></i>
+                                <div>
+                                    <h2 class="font-bold text-base sm:text-lg m-0" style="font-family: var(--font-display); color: var(--soc-text);">Estructura cooperativa</h2>
+                                    <p class="text-sm m-0 mt-1" style="color: var(--soc-text-muted);">Organización cooperativa de trabajadores vigilantes</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row justify-stretch gap-3 text-center">
+                                <div class="p2-kpi-tile flex-1 rounded-lg p-4" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06);">
+                                    <i class="fas fa-users text-xl mb-2" style="color: var(--cootravir-blue-light);"></i>
+                                    <p class="soc-kpi-value m-0 leading-tight">1.170</p>
+                                    <p class="soc-label m-0 mt-2">Trabajadores asociados</p>
+                                </div>
+                                <div class="p2-kpi-tile flex-1 rounded-lg p-4" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06);">
+                                    <i class="fas fa-handshake text-xl mb-2" style="color: var(--cootravir-blue-light);"></i>
+                                    <p class="soc-kpi-value m-0 leading-tight">190</p>
+                                    <p class="soc-label m-0 mt-2">Clientes activos</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="soc-glass p-4 sm:p-5 flex-1 flex flex-col min-h-0 p2-reveal p2-reveal--3 p2-donut-shell">
+                            <div class="p2-donut-head flex items-center gap-2 shrink-0">
+                                <i class="fas fa-chart-pie text-lg shrink-0" style="color: var(--cootravir-gold-light);"></i>
+                                <div>
+                                    <h2 class="font-bold text-base sm:text-lg m-0" style="font-family: var(--font-display); color: var(--soc-text);">Reconocimiento regional</h2>
+                                    <p class="text-sm m-0" style="color: var(--soc-text-muted);">Distribución de cartera por segmento</p>
+                                </div>
+                            </div>
+                            <div class="p2-donut-body">
+                                <div class="p2-chart3d-wrap" id="p2-chart3d-root">
+                                    <div class="p2-chart3d-hud"><span>Vista 3D · WebGL</span></div>
+                                </div>
+                                <aside class="p2-leg-wrap" id="p2-leg-aside" aria-label="Leyenda de segmentos"></aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var slides = Array.prototype.slice.call(document.querySelectorAll(".p2-carousel-slide"));
+            var idx = 0;
+            var autoplayMs = 8500;
+            var timer = null;
+
+            function buildDots() {
+                var wrap = document.getElementById("p2CarDots");
+                if (!wrap) return;
+                wrap.innerHTML = "";
+                slides.forEach(function (_, i) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.className = "p2-carousel-dot";
+                    b.setAttribute("role", "tab");
+                    b.setAttribute("aria-label", "Slide " + (i + 1));
+                    b.setAttribute("aria-current", i === 0 ? "true" : "false");
+                    b.addEventListener("click", function () {
+                        goTo(i);
+                        restartAutoplay();
+                    });
+                    wrap.appendChild(b);
+                });
+            }
+
+            function updateDots() {
+                var wrap = document.getElementById("p2CarDots");
+                if (!wrap) return;
+                var btns = wrap.querySelectorAll(".p2-carousel-dot");
+                btns.forEach(function (b, i) {
+                    b.setAttribute("aria-current", i === idx ? "true" : "false");
+                });
+            }
+
+            function goTo(i) {
+                i = (i + slides.length) % slides.length;
+                slides.forEach(function (el, j) {
+                    el.classList.toggle("is-active", j === i);
+                });
+                idx = i;
+                updateDots();
+            }
+
+            function next() {
+                goTo(idx + 1);
+            }
+
+            function prev() {
+                goTo(idx - 1);
+            }
+
+            function restartAutoplay() {
+                if (timer) clearInterval(timer);
+                timer = setInterval(next, autoplayMs);
+            }
+
+            buildDots();
+            var pr = document.getElementById("p2CarPrev");
+            var nx = document.getElementById("p2CarNext");
+            if (pr) pr.addEventListener("click", function () { prev(); restartAutoplay(); });
+            if (nx) nx.addEventListener("click", function () { next(); restartAutoplay(); });
+            restartAutoplay();
+
+            var data = [
+                { category: "Conjuntos Residenciales", value: 153 },
+                { category: "Centros Comerciales", value: 15 },
+                { category: "Clínicas", value: 11 },
+                { category: "Empresas", value: 11 }
+            ];
+
+            var colorsHex = ["#8eb8ff", "#5a8eef", "#4dd8e8", "#ffd966"];
+            var colorsNum = [0x8eb8ff, 0x5a8eef, 0x4dd8e8, 0xffd966];
+
+            function sumData() {
+                return data.reduce(function (a, d) { return a + d.value; }, 0);
+            }
+
+            function buildLegendHtml() {
+                var aside = document.getElementById("p2-leg-aside");
+                if (!aside) return;
+                var total = sumData();
+                var html = "";
+                html += "<p class=\"p2-leg-title\">Leyenda</p>";
+                html += "<p class=\"p2-leg-total\">" + total + "</p>";
+                html += "<p class=\"p2-leg-sub\">Clientes</p>";
+                html += "<div class=\"p2-leg-list\">";
+                data.forEach(function (d, i) {
+                    var pct = ((d.value / total) * 100).toFixed(0);
+                    html += "<div class=\"p2-leg-row\">";
+                    html += "<span class=\"p2-leg-swatch\" style=\"background:" + colorsHex[i] + "\"></span>";
+                    html += "<span class=\"p2-leg-txt\">" + d.category + "</span>";
+                    html += "<span class=\"p2-leg-pct\">" + pct + "%</span>";
+                    html += "</div>";
+                });
+                html += "</div>";
+                aside.innerHTML = html;
+            }
+
+            buildLegendHtml();
+
+            var p2Three = {
+                renderer: null,
+                scene: null,
+                camera: null,
+                group: null,
+                raf: null,
+                root: null,
+                reduceMotion: false,
+                introStart: 0
+            };
+
+            function disposeDonut3D() {
+                var t = p2Three;
+                if (t.raf) {
+                    cancelAnimationFrame(t.raf);
+                    t.raf = null;
+                }
+                if (t.group && t.scene) {
+                    t.scene.remove(t.group);
+                    t.group.traverse(function (ch) {
+                        if (ch.geometry) ch.geometry.dispose();
+                        if (ch.material) {
+                            if (Array.isArray(ch.material)) {
+                                ch.material.forEach(function (m) { m.dispose(); });
+                            } else {
+                                ch.material.dispose();
+                            }
+                        }
+                    });
+                    t.group = null;
+                }
+                if (t.renderer && t.root) {
+                    var c = t.renderer.domElement;
+                    if (c && c.parentNode === t.root) t.root.removeChild(c);
+                    t.renderer.dispose();
+                    t.renderer = null;
+                }
+                t.scene = null;
+                t.camera = null;
+            }
+
+            /**
+             * Sector anular con perfil de pirámide: base ancha (y=0) y cara superior
+             * más estrecha (mismos ángulos, radios escalados) para troncos inclinados.
+             */
+            function createPyramidFrustumSliceGeometry(innerR, outerR, a0, a1, height, taper, nSeg) {
+                var s = 1 - taper;
+                var innerTop = innerR * s;
+                var outerTop = outerR * s;
+                var n = Math.max(6, Math.min(40, nSeg | 0));
+                var positions = [];
+                var indices = [];
+                var ringIb = [];
+                var ringOb = [];
+                var ringIt = [];
+                var ringOt = [];
+                var v = 0;
+
+                function pushV(x, y, z) {
+                    positions.push(x, y, z);
+                    return v++;
+                }
+
+                var i;
+                for (i = 0; i <= n; i++) {
+                    var t = i / n;
+                    var ang = a0 + (a1 - a0) * t;
+                    var c = Math.cos(ang);
+                    var sn = Math.sin(ang);
+                    ringIb.push(pushV(c * innerR, 0, sn * innerR));
+                    ringOb.push(pushV(c * outerR, 0, sn * outerR));
+                    ringIt.push(pushV(c * innerTop, height, sn * innerTop));
+                    ringOt.push(pushV(c * outerTop, height, sn * outerTop));
+                }
+
+                for (i = 0; i < n; i++) {
+                    var ib0 = ringIb[i];
+                    var ib1 = ringIb[i + 1];
+                    var it0 = ringIt[i];
+                    var it1 = ringIt[i + 1];
+                    indices.push(ib0, it0, it1, ib0, it1, ib1);
+                }
+
+                for (i = 0; i < n; i++) {
+                    var ob0 = ringOb[i];
+                    var ob1 = ringOb[i + 1];
+                    var ot0 = ringOt[i];
+                    var ot1 = ringOt[i + 1];
+                    indices.push(ob0, ob1, ot1, ob0, ot1, ot0);
+                }
+
+                for (i = 0; i < n; i++) {
+                    var bIb0 = ringIb[i];
+                    var bOb0 = ringOb[i];
+                    var bIb1 = ringIb[i + 1];
+                    var bOb1 = ringOb[i + 1];
+                    indices.push(bIb0, bOb0, bIb1, bOb0, bOb1, bIb1);
+                }
+
+                for (i = 0; i < n; i++) {
+                    var tIb0 = ringIt[i];
+                    var tOb0 = ringOt[i];
+                    var tIb1 = ringIt[i + 1];
+                    var tOb1 = ringOt[i + 1];
+                    indices.push(tIb0, tIb1, tOb0, tOb0, tIb1, tOb1);
+                }
+
+                var ia0b = ringIb[0];
+                var oa0b = ringOb[0];
+                var ia0t = ringIt[0];
+                var oa0t = ringOt[0];
+                indices.push(ia0b, oa0b, oa0t, ia0b, oa0t, ia0t);
+
+                var ia1b = ringIb[n];
+                var oa1b = ringOb[n];
+                var ia1t = ringIt[n];
+                var oa1t = ringOt[n];
+                indices.push(ia1b, ia1t, oa1t, ia1b, oa1t, oa1b);
+
+                var geo = new THREE.BufferGeometry();
+                geo.setAttribute("position", new THREE.Float32BufferAttribute(new Float32Array(positions), 3));
+                geo.setIndex(indices);
+                geo.computeVertexNormals();
+                return geo;
+            }
+
+            function renderDonut3D() {
+                var root = document.getElementById("p2-chart3d-root");
+                if (!root || typeof THREE === "undefined") return;
+
+                disposeDonut3D();
+                p2Three.root = root;
+                p2Three.reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                p2Three.introStart = performance.now();
+
+                var hud = root.querySelector(".p2-chart3d-hud");
+                var w = Math.max(root.clientWidth, 200);
+                var h = Math.max(root.clientHeight, 240);
+
+                var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                renderer.setSize(w, h, false);
+                if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
+                renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                renderer.toneMappingExposure = 1.38;
+                renderer.shadowMap.enabled = false;
+                renderer.setClearColor(0x000000, 0);
+                if (hud) root.insertBefore(renderer.domElement, hud);
+                else root.appendChild(renderer.domElement);
+
+                var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera(42, w / h, 0.08, 80);
+                camera.position.set(0, 4.85, 8.4);
+                camera.lookAt(0, 0.08, 0);
+
+                scene.add(new THREE.HemisphereLight(0xc8dcff, 0x1a1428, 0.72));
+                scene.add(new THREE.AmbientLight(0xd0dff8, 0.38));
+                var key = new THREE.DirectionalLight(0xffffff, 0.85);
+                key.position.set(4.5, 11, 6);
+                scene.add(key);
+                var fill = new THREE.DirectionalLight(0xfff4dd, 0.55);
+                fill.position.set(-7, 3, -4);
+                scene.add(fill);
+                var bounce = new THREE.PointLight(0xa8c8ff, 0.45, 20, 1.8);
+                bounce.position.set(0, 2.2, 5);
+                scene.add(bounce);
+
+                var base = new THREE.Mesh(
+                    new THREE.CircleGeometry(4.2, 64),
+                    new THREE.MeshStandardMaterial({
+                        color: 0x0a1224,
+                        metalness: 0.08,
+                        roughness: 0.88,
+                        transparent: true,
+                        opacity: 0.55
+                    })
+                );
+                base.rotation.x = -Math.PI / 2;
+                base.position.y = -0.48;
+                scene.add(base);
+
+                var group = new THREE.Group();
+                group.position.y = 0.1;
+                var total = sumData();
+                var innerR = 0.88;
+                var outerR = 2.38;
+                var depth = 0.62;
+                var pyramidTaper = 0.26;
+                var seam = 0.045;
+                var usable = Math.PI * 2 - data.length * seam;
+                var a = seam * 0.5;
+
+                data.forEach(function (d, i) {
+                    var arc = (d.value / total) * usable;
+                    var seg = Math.max(10, Math.min(36, Math.floor(72 * arc / (Math.PI * 2))));
+                    var geo = createPyramidFrustumSliceGeometry(innerR, outerR, a, a + arc, depth, pyramidTaper, seg);
+                    var baseCol = new THREE.Color(colorsNum[i]);
+                    var mat = new THREE.MeshStandardMaterial({
+                        color: baseCol,
+                        emissive: baseCol.clone().multiplyScalar(i === 3 ? 0.28 : 0.14),
+                        emissiveIntensity: 1,
+                        metalness: 0.12,
+                        roughness: 0.58,
+                        side: THREE.DoubleSide
+                    });
+                    var mesh = new THREE.Mesh(geo, mat);
+                    mesh.userData.sliceIndex = i;
+                    mesh.scale.setScalar(0.04);
+                    group.add(mesh);
+                    a += arc + seam;
+                });
+
+                scene.add(group);
+
+                p2Three.renderer = renderer;
+                p2Three.scene = scene;
+                p2Three.camera = camera;
+                p2Three.group = group;
+
+                var clock = new THREE.Clock();
+
+                function tick() {
+                    p2Three.raf = requestAnimationFrame(tick);
+                    var elapsed = clock.getElapsedTime();
+                    var intro = (performance.now() - p2Three.introStart) / 1000;
+
+                    if (p2Three.group) {
+                        p2Three.group.children.forEach(function (mesh, i) {
+                            if (mesh.userData.sliceIndex === undefined) return;
+                            var t0 = Math.max(0, Math.min(1, (intro - i * 0.09) / 0.75));
+                            t0 = 1 - Math.pow(1 - t0, 3);
+                            mesh.scale.setScalar(THREE.MathUtils.lerp(0.04, 1, t0));
+                        });
+                        if (!p2Three.reduceMotion) {
+                            p2Three.group.rotation.y = elapsed * 0.22;
+                            p2Three.group.rotation.x = 0.5 + Math.sin(elapsed * 0.5) * 0.09;
+                        } else {
+                            p2Three.group.rotation.set(0.5, 0.55, 0);
+                        }
+                    }
+
+                    renderer.render(scene, camera);
+                }
+                tick();
+            }
+
+            var donutBootAttempts = 0;
+            function bootDonut3D() {
+                if (typeof THREE === "undefined") {
+                    donutBootAttempts += 1;
+                    if (donutBootAttempts < 80) {
+                        setTimeout(bootDonut3D, 50);
+                    }
+                    return;
+                }
+                requestAnimationFrame(renderDonut3D);
+            }
+
+            if (document.readyState === "complete") {
+                bootDonut3D();
+            } else {
+                window.addEventListener("load", bootDonut3D);
+            }
+
+            var resizeTimer = null;
+            var roEl = document.getElementById("p2-chart3d-root");
+            if (roEl && typeof ResizeObserver !== "undefined") {
+                new ResizeObserver(function () {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(function () {
+                        bootDonut3D();
+                    }, 120);
+                }).observe(roEl);
+            }
+        })();
+    </script>
+</body>
+</html>

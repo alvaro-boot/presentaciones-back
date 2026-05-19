@@ -1,0 +1,46 @@
+{
+  "type": "FeatureCollection",
+  "name": "Zonas editables — barrios, comunas o conjuntos (polígonos)",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "nombre": "Ejemplo zona céntrica",
+        "tipo": "barrio",
+        "notas": "Polígono de muestra. Edite coordenadas o dibuje en geojson.io y pegue aquí."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-75.7025, 4.8085],
+            [-75.6895, 4.8085],
+            [-75.6895, 4.8175],
+            [-75.7025, 4.8175],
+            [-75.7025, 4.8085]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nombre": "Ejemplo zona occidental",
+        "tipo": "comuna",
+        "notas": "Segundo polígono de ejemplo"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-75.728, 4.802],
+            [-75.712, 4.802],
+            [-75.712, 4.815],
+            [-75.728, 4.815],
+            [-75.728, 4.802]
+          ]
+        ]
+      }
+    }
+  ]
+}

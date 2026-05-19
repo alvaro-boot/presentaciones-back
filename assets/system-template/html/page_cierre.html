@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es" class="prop-fill">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Línea directa operativa y gerencia — COOTRAVIR</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="slides-theme.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .p6-header.soc-header {
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: clamp(12px, 2.5vw, 24px);
+        }
+
+        .p6-head-left {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .p6-kicker {
+            margin: 0 0 4px;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--cootravir-gold-light);
+        }
+
+        .p6-head-left h1 {
+            margin: 0;
+            font-size: clamp(0.95rem, 2.2vw, 1.35rem);
+            line-height: 1.2;
+        }
+
+        .p6-logo-wrap {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .p6-logo {
+            height: clamp(40px, 6.5vh, 56px);
+            width: auto;
+            max-width: min(200px, 38vw);
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+        }
+
+        .p6-body-inner {
+            flex: 1 1 0;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .p6-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(10px, 1.8vw, 18px);
+            width: 100%;
+            max-width: min(1200px, 100%);
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            .p6-grid {
+                grid-template-columns: 1fr;
+                max-width: 420px;
+            }
+        }
+
+        .p6-card {
+            position: relative;
+            border-radius: var(--radius-panel, 14px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background:
+                linear-gradient(165deg, rgba(255, 255, 255, 0.07) 0%, rgba(8, 14, 28, 0.55) 100%);
+            padding: 16px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
+
+        .p6-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cootravir-gold-darker), var(--cootravir-gold-light), var(--cootravir-gold));
+        }
+
+        .p6-card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .p6-card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .p6-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: linear-gradient(145deg, rgba(74, 111, 165, 0.45), rgba(14, 36, 85, 0.9));
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: rgba(232, 237, 245, 0.95);
+            font-size: 1.15rem;
+        }
+
+        .p6-role {
+            display: inline-block;
+            align-self: flex-start;
+            font-size: 0.52rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cootravir-blue-lighter);
+            background: rgba(14, 36, 85, 0.55);
+            border: 1px solid rgba(74, 111, 165, 0.45);
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .p6-name {
+            margin: 0;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+            color: var(--soc-text);
+            letter-spacing: -0.02em;
+        }
+
+        .p6-desc {
+            margin: 0;
+            flex: 1 1 auto;
+            font-size: clamp(0.68rem, 1.15vw, 0.78rem);
+            line-height: 1.45;
+            color: var(--soc-text-muted);
+        }
+
+        .p6-phone {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .p6-phone-label {
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--soc-text-muted);
+            margin-bottom: 4px;
+        }
+
+        .p6-phone a {
+            display: block;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+            color: var(--cootravir-blue-light);
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(74, 111, 165, 0.12);
+            border: 1px solid rgba(74, 111, 165, 0.28);
+            transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .p6-phone a:hover {
+            color: var(--cootravir-gold-light);
+            border-color: rgba(212, 175, 55, 0.4);
+            background: rgba(212, 175, 55, 0.08);
+        }
+
+        .p6-outro {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 10px clamp(14px, 3vw, 28px);
+            font-family: var(--font-display);
+            font-size: clamp(0.72rem, 1.25vw, 0.88rem);
+            font-weight: 600;
+            color: var(--cootravir-blue);
+            background: linear-gradient(90deg, rgba(244, 229, 184, 0.35), rgba(212, 175, 55, 0.55), rgba(244, 229, 184, 0.35));
+            border-top: 1px solid rgba(212, 175, 55, 0.45);
+        }
+    </style>
+</head>
+<body class="prop-fill">
+    <div class="slide soc-slide deck-tech">
+        <div class="deck-tech-bg" aria-hidden="true">
+            <div class="deck-tech-aurora"></div>
+            <div class="deck-tech-grid"></div>
+            <div class="deck-tech-noise"></div>
+            <div class="deck-tech-scan"></div>
+            <div class="deck-tech-particles">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="deck-tech-hud" aria-hidden="true"></div>
+
+        <header class="soc-header p6-header">
+            <div class="p6-head-left">
+                <p class="p6-kicker">Directorio · COOTRAVIR C.T.A.</p>
+                <h1>Línea directa operativa y gerencia</h1>
+            </div>
+            <div class="p6-logo-wrap">
+                <img
+                    class="p6-logo"
+                    src="images/logo-escudo-cootravir.png"
+                    alt="COOTRAVIR C.T.A. Seguridad privada"
+                    width="200"
+                    height="80"
+                    loading="lazy"
+                />
+            </div>
+        </header>
+
+        <div class="soc-body">
+            <div class="doc-wrap flex flex-col flex-1 min-h-0 p6-body-inner">
+                <div class="p6-grid" role="list">
+                    <article class="p6-card" role="listitem">
+                        <div class="p6-card-top">
+                            <div class="p6-avatar" aria-hidden="true"><i class="fas fa-user-tie"></i></div>
+                            <div class="p6-card-meta">
+                                <span class="p6-role">Gerencia</span>
+                                <h2 class="p6-name">Luis Humberto Zapata</h2>
+                            </div>
+                        </div>
+                        <p class="p6-desc">Contacto directo para seguimiento institucional.</p>
+                        <div class="p6-phone">
+                            <div class="p6-phone-label">Teléfono</div>
+                            <a href="tel:+573146243776">314 624 3776</a>
+                        </div>
+                    </article>
+
+                    <article class="p6-card" role="listitem">
+                        <div class="p6-card-top">
+                            <div class="p6-avatar" aria-hidden="true"><i class="fas fa-user-shield"></i></div>
+                            <div class="p6-card-meta">
+                                <span class="p6-role">Director operaciones</span>
+                                <h2 class="p6-name">Serafin Cano</h2>
+                            </div>
+                        </div>
+                        <p class="p6-desc">Coordinación de despliegue y calidad del servicio.</p>
+                        <div class="p6-phone">
+                            <div class="p6-phone-label">Teléfono</div>
+                            <a href="tel:+573104129132">310 412 9132</a>
+                        </div>
+                    </article>
+
+                    <article class="p6-card" role="listitem">
+                        <div class="p6-card-top">
+                            <div class="p6-avatar" aria-hidden="true"><i class="fas fa-user"></i></div>
+                            <div class="p6-card-meta">
+                                <span class="p6-role">Subdirector operativo</span>
+                                <h2 class="p6-name">Alex Martínez</h2>
+                            </div>
+                        </div>
+                        <p class="p6-desc">Apoyo en campo y articulación con autoridades.</p>
+                        <div class="p6-phone">
+                            <div class="p6-phone-label">Teléfono</div>
+                            <a href="tel:+573162591016">316 259 1016</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <p class="p6-outro" role="docinfo">Gracias. Recuerde que la seguridad es de todos.</p>
+    </div>
+</body>
+</html>
