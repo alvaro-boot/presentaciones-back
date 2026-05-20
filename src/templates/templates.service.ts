@@ -59,6 +59,8 @@ export class TemplatesService {
     return html
       .replace(/src="images\//g, 'src="/legacy/images/')
       .replace(/data-cert-src="images\//g, 'data-cert-src="/legacy/images/')
+      .replace(/data-p6-logo-src="images\//g, 'data-p6-logo-src="/legacy/images/')
+      .replace(/data-ben-image="images\//g, 'data-ben-image="/legacy/images/')
       .replace(/href="slides-theme\.css"/g, 'href="/legacy/slides-theme.css"')
       .replace(/src="page_4-3d\.js"/g, 'src="/legacy/page_4-3d.js"')
       .replace(/src="js\//g, 'src="/legacy/js/')

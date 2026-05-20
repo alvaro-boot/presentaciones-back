@@ -9,6 +9,7 @@ import { Slide } from '../entities/slide.entity';
 import { CreateSlideDto } from './dto/create-slide.dto';
 import { ReorderSlidesDto } from './dto/reorder-slides.dto';
 import { UpdateSlideDto } from './dto/update-slide.dto';
+import { sanitizeHtmlForStorage } from '../files/storage.constants';
 
 const SLIDE_TEMPLATES: Record<string, { html: string; css: string | null }> = {
   blank: {
@@ -62,6 +63,9 @@ export class SlidesService {
 
   async update(proposalId: string, slideId: string, dto: UpdateSlideDto) {
     const slide = await this.findOne(proposalId, slideId);
+    if (dto.html !== undefined) {
+      dto = { ...dto, html: sanitizeHtmlForStorage(dto.html) };
+    }
     Object.assign(slide, dto);
     return this.slidesRepo.save(slide);
   }
