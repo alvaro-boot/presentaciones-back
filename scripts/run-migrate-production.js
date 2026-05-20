@@ -22,6 +22,25 @@ function loadEnv() {
   return out;
 }
 
+async function columnExists(conn, schema, table, column) {
+  const [rows] = await conn.query(
+    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
+    [schema, table, column],
+  );
+  return rows.length > 0;
+}
+
+async function ensureColumn(conn, schema, table, column, ddl) {
+  if (await columnExists(conn, schema, table, column)) {
+    console.log(`OK (ya existe): ${table}.${column}`);
+    return false;
+  }
+  await conn.query(ddl);
+  console.log(`Migracion OK: ${table}.${column} creada.`);
+  return true;
+}
+
 async function main() {
   const env = loadEnv();
   const conn = await mysql.createConnection({
@@ -34,19 +53,30 @@ async function main() {
   });
 
   try {
-    const [cols] = await conn.query(
-      `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-       WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'slides' AND COLUMN_NAME = 'scripts'`,
-      [env.DATABASE_NAME],
+    console.log('Host:', env.DATABASE_HOST, '| DB:', env.DATABASE_NAME);
+
+    await ensureColumn(
+      conn,
+      env.DATABASE_NAME,
+      'slides',
+      'scripts',
+      'ALTER TABLE slides ADD COLUMN scripts JSON NULL',
     );
-    if (cols.length) {
-      console.log('La columna scripts ya existe. Nada que hacer.');
-    } else {
-      await conn.query('ALTER TABLE slides ADD COLUMN scripts JSON NULL');
-      console.log('Migracion OK: columna scripts anadida a slides.');
-    }
-    const [verify] = await conn.query("SHOW COLUMNS FROM slides LIKE 'scripts'");
-    console.log('Verificacion:', verify);
+
+    await ensureColumn(
+      conn,
+      env.DATABASE_NAME,
+      'proposals',
+      'theme_config',
+      'ALTER TABLE proposals ADD COLUMN theme_config JSON NULL AFTER map_config',
+    );
+
+    const [slides] = await conn.query("SHOW COLUMNS FROM slides LIKE 'scripts'");
+    const [theme] = await conn.query(
+      "SHOW COLUMNS FROM proposals LIKE 'theme_config'",
+    );
+    console.log('Verificacion slides.scripts:', slides);
+    console.log('Verificacion proposals.theme_config:', theme);
   } finally {
     await conn.end();
   }
