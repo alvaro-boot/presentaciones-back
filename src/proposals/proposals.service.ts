@@ -13,6 +13,7 @@ import { CreateProposalDto } from './dto/create-proposal.dto';
 import { DuplicateProposalDto } from './dto/duplicate-proposal.dto';
 import { UpdateMapDto } from './dto/update-map.dto';
 import { UpdateProposalDto } from './dto/update-proposal.dto';
+import { normalizeThemeConfig } from './theme-config.util';
 import { FilesService } from '../files/files.service';
 import { toStorageRef } from '../files/storage.constants';
 
@@ -122,7 +123,11 @@ export class ProposalsService {
       const exists = await this.proposalsRepo.findOne({ where: { slug: dto.slug } });
       if (exists) throw new ConflictException('El slug ya existe');
     }
-    Object.assign(proposal, dto);
+    const { themeConfig, ...rest } = dto;
+    Object.assign(proposal, rest);
+    if (themeConfig !== undefined) {
+      proposal.themeConfig = normalizeThemeConfig(themeConfig);
+    }
     return this.proposalsRepo.save(proposal);
   }
 

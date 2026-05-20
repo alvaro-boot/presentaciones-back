@@ -5,6 +5,6 @@
 ALTER TABLE slides
   ADD COLUMN scripts JSON NULL;
 
--- Propuestas: columnas añadidas después del primer despliegue (omitir si ya existen)
--- ALTER TABLE proposals ADD COLUMN is_template TINYINT(1) NOT NULL DEFAULT 0 AFTER status;
--- ALTER TABLE proposals ADD COLUMN theme_config JSON NULL AFTER map_config;
+-- Propuestas: tema por propuesta (JSON en theme_config)
+-- Ejecutar si la columna no existe (error "Duplicate column" = ya está creada).
+ALTER TABLE proposals ADD COLUMN theme_config JSON NULL AFTER map_config;
