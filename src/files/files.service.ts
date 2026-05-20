@@ -120,18 +120,25 @@ export class FilesService {
 
   async createSignedUrls(paths: string[]) {
     const unique = [...new Set(paths)];
-    const entries = await Promise.all(
+    const out: Record<string, { url: string; expiresAt: string }> = {};
+    const results = await Promise.allSettled(
       unique.map(async (path) => {
         const signed = await this.createSignedUrl(path);
-        return [path, signed] as const;
+        return { path, signed };
       }),
     );
-    return Object.fromEntries(
-      entries.map(([path, signed]) => [
-        path,
-        { url: signed.url, expiresAt: signed.expiresAt },
-      ]),
-    );
+    for (const result of results) {
+      if (result.status === 'fulfilled') {
+        const { path, signed } = result.value;
+        out[path] = { url: signed.url, expiresAt: signed.expiresAt };
+      } else {
+        console.warn(
+          '[FilesService] No se pudo firmar un archivo:',
+          result.reason,
+        );
+      }
+    }
+    return out;
   }
 
   /** Sustituye __STORAGE__:ruta por URLs firmadas frescas. */
